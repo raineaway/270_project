@@ -8,7 +8,7 @@ create table if not exists `user` (
     lastname varchar(100) NOT NULL,
     firstname varchar(100) NOT NULL,
     username varchar(100) UNIQUE NOT NULL,
-    email_address varchar(255) NOT NULL,
+    email_address varchar(255) UNIQUE NOT NULL,
     password varchar(255) NOT NULL,
     PRIMARY KEY (user_id)
 );
