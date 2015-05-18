@@ -7,6 +7,7 @@
         <div id="login_form">
 	        <p>Login</p>
         <?php
+            echo validation_errors();
             if (isset($errors['warning'])) {
                 echo $errors['warning'];
             }

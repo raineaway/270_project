@@ -22,24 +22,23 @@ class Home extends CI_Controller {
     public function login() {
         $errors = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $username = $this->input->post("username", TRUE);
-            $password = $this->input->post("password", TRUE);
+            $this->load->library('form_validation');
 
-            if (empty($username)) {
-                $errors['username'] = "Username is required.";
-            }
-            if (empty($password)) {
-                $errors['password'] = "Password is required.";
-            }
+            $this->form_validation->set_rules('username', 'Username', 'required');
+            $this->form_validation->set_rules('password', 'Password', 'required');
 
-            if (count($errors) == 0) {
-                $this->load->model('User_model', 'user_model');
-                $result = $this->user_model->login($username, $password);
-                if ($result === NULL) {
-                    $errors['warning'] = 'Invalid username/password.';
-                } else {
-                    $this->session->set_userdata($result);
-                    header("Location: " . site_url(array('home')));
+            if ($this->form_validation->run() == TRUE) {
+                $username = $this->input->post("username", TRUE);
+                $password = $this->input->post("password", TRUE);
+                if (count($errors) == 0) {
+                    $this->load->model('User_model', 'user_model');
+                    $result = $this->user_model->login($username, $password);
+                    if ($result === NULL) {
+                        $errors['warning'] = 'Invalid username/password.';
+                    } else {
+                        $this->session->set_userdata($result);
+                        header("Location: " . site_url(array('home')));
+                    }
                 }
             }
         }
@@ -53,20 +52,27 @@ class Home extends CI_Controller {
     }
 
     public function signup() {
-        $errors = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $data = array(
-                'username'         => $this->input->post("username", TRUE),
-                'email_address'    => $this->input->post("email_address", TRUE),
-                'lastname'         => $this->input->post("lastname", TRUE),
-                'firstname'        => $this->input->post("firstname", TRUE),
-                'password'         => $this->input->post("password", TRUE),
-                'confirm_password' => $this->input->post("confirm_password", TRUE)
-            );
+            $this->load->library('form_validation');
 
-            if ($data['password'] != $data['confirm_password']) {
-                $errors['password'] = "Passwords do not match.";
-            } else {
+            $this->form_validation->set_rules('username', 'Username', 'required|min_length[3]|is_unique[user.username]');
+            $this->form_validation->set_rules('email_address', 'Email Address', 'required|valid_email|is_unique[user.email_address]');
+            $this->form_validation->set_rules('firstname', 'First Name', 'required|min_length[2]');
+            $this->form_validation->set_rules('lastname', 'Last Name', 'required|min_length[2]');
+            $this->form_validation->set_rules('password', 'Password', 'required|matches[confirm_password]');
+            $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required');
+
+            if ($this->form_validation->run() == TRUE) {
+
+                $data = array(
+                    'username'         => $this->input->post("username", TRUE),
+                    'email_address'    => $this->input->post("email_address", TRUE),
+                    'lastname'         => $this->input->post("lastname", TRUE),
+                    'firstname'        => $this->input->post("firstname", TRUE),
+                    'password'         => $this->input->post("password", TRUE),
+                    'confirm_password' => $this->input->post("confirm_password", TRUE)
+                );
+
                 $this->load->model('User_model', 'user_model');
                 $result = $this->user_model->create($data);
 
@@ -80,7 +86,6 @@ class Home extends CI_Controller {
             }
         }
 
-        $data['errors'] = $errors;
         $data['main_content'] = 'signup.php';
         $this->load->view("includes/template", $data);
         return;
