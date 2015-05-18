@@ -76,7 +76,6 @@ class Home extends CI_Controller {
                 $result = $this->user_model->create($data);
 
                 if ($result['status'] == 'success') {
-                   //set user session
                     $user = $this->user_model->get_by_username($data['username']);
                     $this->session->set_userdata($user);
 
@@ -88,7 +87,7 @@ class Home extends CI_Controller {
                       'date_created'   => date("Y-m-01 00:00:00")
                    );
 
-                   $this->load->model('Calendar_model', 'calendar_model');
+                   $this->load->model('calendar_model');
                    $calresult = $this->calendar_model->create($data);
 
                     header("Location: " . site_url(array('home')));
