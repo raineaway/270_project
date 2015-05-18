@@ -67,7 +67,7 @@ $db['default'] = array(
 	'hostname' => 'localhost',
 	'username' => 'scheduler_user',
 	'password' => '$chedulerp@$$',
-	'database' => 'Scheduler',
+	'database' => 'scheduler',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -81,5 +81,5 @@ $db['default'] = array(
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
-	'save_queries' => TRUE$chedulerp@$$
+	'save_queries' => TRUE
 );
