@@ -1,44 +1,29 @@
-<html>
-<head>
-    <title>Scheduler: Sign Up</title>
-</head>
-<body>
-    <div>
-        <div>Create an Account</div>
-        <div>
-            <?php if (isset($errors['warning'])) { ?>
-                <div class="warning">Error: <?php echo $errors['warning']; ?></div>
-            <?php } ?>
-            <form action='<?php echo site_url(array('signup')); ?>' method='POST'>
-                <div class="row">
-                    <div class="field"><input type="text" name="username" placeholder="Username" /></div>
-                </div>
-                <div class="row">
-                    <div class="field"><input type="text" name="email_address" placeholder="Email Address" /></div>
-                </div>
-                <div class="row">
-                    <div class="field"><input type="text" name="firstname" placeholder="First Name" /></div>
-                </div>
-                <div class="row">
-                    <div class="field"><input type="text" name="lastname" placeholder="Last Name" /></div>
-                </div>
-                <div class="row">
-                    <?php if (isset($errors['password'])) {?>
-                        <div class="error"><?php echo $errors['password']; ?></div>
-                    <?php } ?>
-                    <div class="field"><input type="password" name="password" placeholder="Password" /></div>
-                </div>
-                <div class="row">
-                    <div class="field"><input type="password" name="confirm_password" placeholder="Confirm Password" /></div>
-                </div>
-                <div class="row submit">
-                    <input type="Submit" value="Sign Up" />
-                </div>
-                <div class="row right">
-                    Already have an account? <a href="<?php echo site_url(array("login")); ?>">Log In.</a>
-                </div>
-            </form>
+<div id="container">
+    <h1>Welcome to Skedjul!</h1>
+
+    <div id="body">
+        <div id="login_form">
+            <p>Create an account
+
+            <?php
+                if (isset($errors['warning'])) {
+                    echo $errors['warning'];
+                }
+                echo form_open('signup');
+                echo form_input(array('name' =>'username','placeholder' => 'Username'));
+                echo form_input(array('name' =>'email_address','placeholder' => 'Email Address'));
+                echo form_input(array('name' =>'firstname','placeholder' => 'First Name'));
+                echo form_input(array('name' =>'lastname','placeholder' => 'Last Name'));
+
+                if (isset($errors['password'])) {
+                    echo $errors['password'];
+                }
+                echo form_password(array('name' =>'password','placeholder' => 'Password'));
+                echo form_password(array('name' =>'confirm_password','placeholder' => 'Confirm Password'));
+                echo form_submit('submit', 'Sign Up');
+                echo anchor('login', 'Log In')
+            ?>
+
         </div>
     </div>
-</body>
-</html>
+</div>

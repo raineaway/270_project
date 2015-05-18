@@ -45,9 +45,10 @@ class Home extends CI_Controller {
         }
 
         $data = array(
-            'errors' => $errors
+            'errors'       => $errors,
+            'main_content' => 'login_form.php'
         );
-        $this->load->view("login", $data);
+        $this->load->view("includes/template", $data);
         return;
     }
 
@@ -80,9 +81,10 @@ class Home extends CI_Controller {
         }
 
         $data = array(
-            'errors' => $errors
+            'errors'       => $errors,
+            'main_content' => 'signup.php'
         );
-        $this->load->view("signup", $data);
+        $this->load->view("includes/template", $data);
         return;
     }
 }
