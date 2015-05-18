@@ -35,4 +35,3 @@ create table if not exists event (
     PRIMARY KEY (event_id),
     FOREIGN KEY (cal_id) REFERENCES calendar(cal_id)
 );
-
