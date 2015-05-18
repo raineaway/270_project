@@ -12,6 +12,7 @@ class Home extends CI_Controller {
         );
         if ($this->session->userdata('username')) {
             $data['main_content'] = 'logged_in_area';
+            $data['username']     = $this->session->userdata('username');
             $this->load->view('includes/template', $data);
         } else {
             header("Location: " . site_url(array('login')));
@@ -79,10 +80,8 @@ class Home extends CI_Controller {
             }
         }
 
-        $data = array(
-            'errors'       => $errors,
-            'main_content' => 'signup.php'
-        );
+        $data['errors'] = $errors;
+        $data['main_content'] = 'signup.php';
         $this->load->view("includes/template", $data);
         return;
     }
