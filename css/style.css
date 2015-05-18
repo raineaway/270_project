@@ -4,7 +4,7 @@
 body {
    background-color: #fff;
    margin: 40px;
-   font: 13px/20px normal Helvetica, Arial, sans-serif;
+   font: 14px/20px normal Helvetica, Arial, sans-serif;
    color: #4F5155;
 }
 
@@ -90,4 +90,52 @@ input[type=submit], form a, a {
 input[type=submit]:hover, form a:hover {
 	background: #287368;
 	cursor: pointer;
+}
+
+table.calendar {
+ width: 70%;
+ height: 85%;
+ margin: auto;
+ border-collapse: collapse;
+ border-left: 1px solid #A2ADBC;
+ border-right: 1px solid #A2ADBC;
+ border-bottom: 1px solid #A2ADBC;
+ font: normal 12px/20px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+ color: #287368;
+ text-align: center;
+ background-color: #fff;
+}
+
+.calendar {
+   font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+   font-size: 14px;
+}
+
+.calendar .days td {
+	width: 80px; height: 80px; padding: 4px;
+	border: 1px solid #999;
+	vertical-align: top;
+	background-color: #DEF;
+}
+
+.calendar .days td:hover {
+	background-color: #FFF;
+}
+
+.calendar .highlight {
+	font-weight: bold; color: #00F;
+}
+
+
+tr {
+   font-weight: bold;
+}
+
+th {
+	font: bold 11px/20px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #616B76;
+	background: #D9E2E1;
+	border-right: 1px solid #A2ADBC;
+	border-bottom: 1px solid #A2ADBC;
+	border-top: 1px solid #A2ADBC;
 }
