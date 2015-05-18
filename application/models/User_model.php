@@ -50,13 +50,13 @@ class User_model extends CI_Model {
     }
 
     public function login($username, $password) {
-        $pass = $username . ":Scheduler:" . $password;
+        $pass = md5($username . ":Scheduler:" . $password);
         $sql = "SELECT * FROM `user` WHERE username = " . $this->db->escape($username) . " "
-            . "AND password = " . $this->db->escape($password) . "";
+            . "AND password = " . $this->db->escape($pass) . "";
 
         $query = $this->db->query($sql);
         $user = NULL;
-        foreach ($query->result() as $row) {
+        foreach ($query->result_array() as $row) {
             $user = $row;
         }
         return $user;
@@ -72,8 +72,8 @@ class User_model extends CI_Model {
         $query = $this->db->query($sql);
 
         $user = NULL;
-        foreach ($query->result() as $row) {
-            $user = $row->to_array();
+        foreach ($query->result_array() as $row) {
+            $user = $row;
         }
 
         return $user;

@@ -1,4 +1,3 @@
-<?php echo ?>
 <div id="container">
 	<h1>Welcome to Skedjul!</h1>
 

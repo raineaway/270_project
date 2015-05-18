@@ -4,8 +4,6 @@ class Home extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library("session");
-        $this->load->helper("url");
     }
 
     public function index() {
@@ -13,7 +11,8 @@ class Home extends CI_Controller {
             'title' => 'Scheduler'
         );
         if ($this->session->userdata('username')) {
-            $this->load->view('home', $data);
+            $data['main_content'] = 'logged_in_area';
+            $this->load->view('includes/template', $data);
         } else {
             header("Location: " . site_url(array('login')));
         }
