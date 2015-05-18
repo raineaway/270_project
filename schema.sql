@@ -5,8 +5,8 @@ use scheduler;
 
 create table if not exists `user` (
     user_id int(11) NOT NULL AUTO_INCREMENT,
-    lastname varchar(100),
-    firstname varchar(100),
+    lastname varchar(100) NOT NULL,
+    firstname varchar(100) NOT NULL,
     username varchar(100) UNIQUE NOT NULL,
     email_address varchar(255) NOT NULL,
     password varchar(255) NOT NULL,
