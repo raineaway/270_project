@@ -65,8 +65,8 @@ $query_builder = TRUE;
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => 'pantry07',
+	'username' => 'scheduler_user',
+	'password' => '$chedulerp@$$',
 	'database' => 'Scheduler',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
@@ -81,5 +81,5 @@ $db['default'] = array(
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
-	'save_queries' => TRUE
+	'save_queries' => TRUE$chedulerp@$$
 );
