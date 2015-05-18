@@ -73,7 +73,7 @@ input[type=text], input[type=password] {
 	padding: 1em;
 }
 
-input[type=submit], form a {
+input[type=submit], form a, a {
 	border: none;
 	margin-right: 1em;
 	padding: 6px;
