@@ -35,14 +35,14 @@ class Event_model extends CI_Model {
             return array("status" => "fail", "error" => "event ID is required.");
         }
 
-        $sql = "UPDATE `event` SET (name, is_all_day, date_start, date_end, recurrence_type, cal_id) "
-            . "VALUES (" . $this->db->escape($data['name']) . ", "
-            . $this->db->escape($data['is_all_day']) . ", "
-            . $this->db->escape($data['date_start']) . ", "
-            . $this->db->escape($data['date_end']) . ", "
-            . $this->db->escape($data['recurrence_type']) . ", "
-            . $this->db->escape($data['cal_id']) . ") "
-            . "WHERE event_id = " . $this->db->escape($data['event_id']);
+        $sql = "UPDATE `event` SET "
+            . "name = " . $this->db->escape($data['name']) . ", "
+            . "is_all_day = " . $this->db->escape($data['is_all_day']) . ", "
+            . "date_start = " . $this->db->escape($data['date_start']) . ", "
+            . "date_end = " . $this->db->escape($data['date_end']) . ", "
+            . "recurrence_type = " . $this->db->escape($data['recurrence_type']) . ", "
+            . "cal_id = " . $this->db->escape($data['cal_id'])
+            . " WHERE event_id = " . $this->db->escape($data['event_id']);
 
         $this->db->query($sql);
         $rows = $this->db->affected_rows();
