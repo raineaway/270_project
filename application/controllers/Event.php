@@ -9,13 +9,7 @@ class Event extends CI_Controller {
     }
 
     public function form(){
-        $this->load->model('calendar_model');
-        $calendars = $this->calendar_model->get_calendars($this->session->userdata('user_id'));
-        $data['calendars'] = array();
-        foreach ($calendars as $calendar) {
-            $data['calendars'][$calendar['cal_id']] = $calendar['name'];
-        }
-
+        $data['calendars'] = $this->get_calendars();
         $data['main_content'] = 'event_form';
         $this->load->view('includes/template', $data);
     }
@@ -59,21 +53,25 @@ class Event extends CI_Controller {
         }
         $data = array(
             'errors'       => $errors,
-            'main_content' => 'event_form.php'
+            'main_content' => 'event_form.php',
+            'calendars'    => $this->get_calendars()
         );
 
-        $this->load->model('calendar_model');
-        $calendars = $this->calendar_model->get_calendars($this->session->userdata('user_id'));
-        $data['calendars'] = array();
-        foreach ($calendars as $calendar) {
-            $data['calendars'][$calendar['cal_id']] = $calendar['name'];
-        }
-        
         $this->load->view("includes/template", $data);
         return;
     }
 
-    public function check_date($start_date, $end_date, $start_time=NULL, $end_time=NULL) {
+    private function get_calendars() {
+        $this->load->model("calendar_model");
+        $query = $this->calendar_model->get_all_calendars_by_user_id($this->session->userdata("user_id"));
+        $calendars = array();
+        foreach ($query->result_array() as $row) {
+            $calendars[$row['cal_id']] = $row['name'];
+        }
+        return $calendars;
+    }
+
+    private function check_date($start_date, $end_date, $start_time=NULL, $end_time=NULL) {
         $start = $start_date . " " . ($start_time ? ($start_time . ":00") : "00:00:00");
         $end = $end_date . " " . ($end_time ? ($end_time . ":00") : "00:00:00");
 
