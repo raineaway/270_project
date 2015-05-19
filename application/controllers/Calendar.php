@@ -137,5 +137,16 @@ class Calendar extends CI_Controller {
             header("Location: " . site_url(array('login')));
         }
     }
+
+    public function delete($cal_id) {
+        $this->load->model('calendar_model');
+        $result = $this->calendar_model->delete_by_id($cal_id);
+        if ($result === TRUE) {
+            $this->session->set_flashdata('success', 'Successfully deleted calendar.');
+        } else {
+            $this->session->set_flashdata('fail', $result['error']);
+        }
+        redirect('calendar/list_all');
+    }
 }
 ?>

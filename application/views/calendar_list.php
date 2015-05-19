@@ -12,7 +12,7 @@
             <?php } ?>
             <div>
                 <div style="float:left; width:75%;">Name</div>
-                <div style="float:left; width:24%;">Action</div>
+                <div style="float:left; width:24%;">Actions</div>
             </div>
             <br/>
             <br/>
@@ -23,6 +23,7 @@
                     </div>
                     <div style="float:left; width:25%;">
                         <a href="<?php echo site_url(array('calendar/update', $calendar['cal_id'])); ?>">Edit</a>
+                        <a href="<?php echo site_url(array('calendar/delete', $calendar['cal_id'])); ?>">Delete</a>
                     </div>
                 </div>
             <?php } ?>

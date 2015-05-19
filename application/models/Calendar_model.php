@@ -121,5 +121,24 @@ class Calendar_model extends CI_Model {
         $sql = "SELECT * FROM `calendar` WHERE user_id = " . $this->db->escape($user_id) . "";
         return $this->db->query($sql);
     }
+
+    public function delete_by_id($cal_id) {
+        $this->db->trans_begin();
+
+        $sql = "DELETE FROM `event` WHERE cal_id = " . $this->db->escape($cal_id);
+        $this->db->query($sql);
+
+        $sql = "DELETE FROM `calendar` WHERE cal_id = " . $this->db->escape($cal_id);
+        $this->db->query($sql);
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollbak();
+            return array("status" => "fail", "error" => $this->db->_error_message());
+        } else {
+            $this->db->trans_commit();
+            return TRUE;
+        }
+    }
+
 }
 ?>
