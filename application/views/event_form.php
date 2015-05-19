@@ -14,36 +14,37 @@
                     'placeholder' => 'Event Name',
                     'value'       => set_value('name')));
 
-               echo form_label('Start Date', 'start_date');
+               echo form_label('Start Date', 'date_start');
                echo nbs(3);
                echo form_input(array(
-                     'name'   => 'start_date',
+                     'name'   => 'date_start',
                      'type'   => 'date',
-                     'value'  => set_value('start_date')));
+                     'value'  => set_value('date_start')));
                echo form_input(array(
-                     'name'   => 'start_time',
+                     'name'   => 'time_start',
                      'type'   => 'time',
-                     'value'  => set_value('start_time')));
+                     'value'  => set_value('time_start')));
                echo br(1);
 
-               echo form_label('End Date', 'end_date');
+               echo form_label('End Date', 'date_end');
                echo nbs(4);
                echo form_input(array(
-                     'name'   => 'end_date',
+                     'name'   => 'date_end',
                      'type'   => 'date',
-                     'value'  => set_value('end_date')));
+                     'value'  => set_value('date_end')));
                echo form_input(array(
-                     'name'   => 'end_time',
+                     'name'   => 'time_end',
                      'type'   => 'time',
-                     'value'  => set_value('end_time')));
+                     'value'  => set_value('time_end')));
                echo br(2);
 
+               echo form_label('All day event', 'is_all_day');
+               echo nbs(2);
                echo form_checkbox(array(
                   'name'      => 'is_all_day',
-                  'value'     => 'All day',
+                  'value'     => 1,
                   'checked'   => FALSE));
-
-               echo form_label('All day event', 'is_all_day');
+               echo nbs(5);
                $recurrence = array(
                   'never' => 'Never',
                   'daily' => 'Daily',
@@ -52,8 +53,8 @@
                   'yearly' => 'Yearly'
                );
                echo form_label('Repeat', 'recurrence');
-               echo nbs(3);
-               echo form_dropdown('recurrence', $recurrence, 'never');
+               echo nbs(2);
+               echo form_dropdown('recurrence_type', $recurrence, 'never');
                echo br(3);
                echo form_submit('submit', 'Create Event');
                echo anchor('calendar', 'Cancel')

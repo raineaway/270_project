@@ -7,6 +7,29 @@ class Event_model extends CI_Model {
         parent::__construct($this->table);
     }
 
+    public function create($data) {
+      if (!isset($data['name']) || empty($data['name'])) {
+           return array("status" => "fail", "error" => "event name is required");
+      }
+
+      $sql = "INSERT INTO `event` (name, is_all_day, date_start, date_end, recurrence_type, cal_id, date_created) "
+           . "VALUES (" . $this->db->escape($data['name']) . ", "
+           . $this->db->escape($data['is_all_day']) . ", "
+           . $this->db->escape($data['date_start']) . ", "
+           . $this->db->escape($data['date_end']) . ", "
+           . $this->db->escape($data['recurrence_type']) . ", "
+           . $this->db->escape($data['cal-id']) . ", "
+           . $this->db->escape($data['date_created']) . ")";
+
+      $this->db->query($sql);
+      $rows = $this->db->affected_rows();
+
+      if ($rows > 0) {
+           return array("status" => "success");
+      }
+      return array("status" => "fail", "error" => $this->db->_error_message());
+    }
+
     public function get_events_by_calendar($cal_id, $view, $date_start) {
         // $date_start must be a unix timestamp
         if ($view == "month") {

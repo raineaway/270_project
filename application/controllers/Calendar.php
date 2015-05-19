@@ -24,6 +24,7 @@ class Calendar extends CI_Controller {
   }
 
   public function new_calendar(){
+     $errors = array();
      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $this->form_validation->set_rules('name', 'Calendar Name', 'required');
         $this->form_validation->set_rules('color', 'Color', 'required');
@@ -45,6 +46,13 @@ class Calendar extends CI_Controller {
                $errors['warning'] = $result['error'];
            }
 
+        } else {
+           $data = array(
+               'errors'       => $errors,
+               'main_content' => 'calendar_form.php'
+           );
+           $this->load->view("includes/template", $data);
+           return;
         }
      }
   }

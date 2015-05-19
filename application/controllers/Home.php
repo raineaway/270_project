@@ -84,7 +84,7 @@ class Home extends CI_Controller {
                       'user_id'        =>  $this->session->userdata('user_id'),
                       'name'           => 'Default',
                       'color'          => '#000099', //blue
-                      'date_created'   => date("Y-m-01 00:00:00")
+                      'date_created'   => date("Y-m-d H:i:s")
                    );
 
                    $this->load->model('calendar_model');
