@@ -24,7 +24,29 @@ class Calendar extends CI_Controller {
   }
 
   public function new_calendar(){
+     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $this->form_validation->set_rules('name', 'Calendar Name', 'required');
+        $this->form_validation->set_rules('color', 'Color', 'required');
 
+        if($this->form_validation->run() == TRUE) {
+           $data = array(
+             'user_id'        => $this->session->userdata('user_id'),
+             'name'           => $this->input->post("name", TRUE),
+             'color'          => $this->input->post("color", TRUE),
+             'date_created'   => date("Y-m-01 00:00:00")
+           );
+
+           $this->load->model('calendar_model');
+           $result = $this->calendar_model->create($data);
+
+           if ($result['status'] == 'success') {
+               header("Location: " . site_url(array('calendar')));
+           } else {
+               $errors['warning'] = $result['error'];
+           }
+
+        }
+     }
   }
 }
 ?>
