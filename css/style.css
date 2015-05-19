@@ -63,6 +63,15 @@ p.footer {
 	-moz-border-radius: 3px;
 }
 
+#subcontainer {
+    width: 600px;
+	background: #f0f0f0;
+	border: 1px solid white;
+	margin: 25px 50 0 50 0;
+	padding: 1em;
+	-moz-border-radius: 3px;
+}
+
 input[type=text], input[type=password] {
 	display: block;
 	margin: 0 0 1em 0;

@@ -9,7 +9,7 @@
 		<?php echo br(1);
 		 		echo anchor(site_url(array('event/form')), 'Create New Event');
 		 		//echo anchor(site_url(array('calendar/form')), 'Create New Calendar');
-                echo anchor(site_url(array('calendar/list')), 'My Calendars');
+                echo anchor(site_url(array('calendar/list_all')), 'My Calendars');
                 echo anchor(site_url(array('user/account')), 'My Account');
 		 		echo br(3);
 
