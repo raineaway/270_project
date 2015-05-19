@@ -10,18 +10,20 @@
 		 		echo anchor(site_url(array('event/form')), 'Create New Event');
 		 		//echo anchor(site_url(array('calendar/form')), 'Create New Calendar');
                 echo anchor(site_url(array('calendar/list_all')), 'My Calendars');
-                echo anchor(site_url(array('user/account')), 'My Account');
+                //echo anchor(site_url(array('user/account')), 'My Account');
 		 		echo br(3);
 
 				echo form_dropdown('calendars', $calendar_list, 'all');
 
 				echo $calendar; ?>
    </div>
-
-	<div>
-		<?php echo anchor(site_url(array('home/logout')), 'Logout')?>
+		<?php
+			echo anchor(site_url(array('home/account')), 'Account Settings') ;
+			echo anchor(site_url(array('home/logout')), 'Logout');
+				?>
 		<br />
 	</div>
+	<?php echo br(2);?>
 <table>
 
 </table>

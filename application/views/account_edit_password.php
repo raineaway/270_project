@@ -1,29 +1,9 @@
 <div id="container">
     <h1>Welcome to Skedjul!</h1>
 
-    <div id="body">
+	<div id="body">
         <div id="login_form">
-
-            <?php
-                echo heading('Your Account', 3);
-
-                echo "Username : " . $user['username'];
-                echo br(1);
-                echo "Email Address : " . $user['email_address'];
-                echo br(1);
-                echo "First Name : " . $user['firstname'];
-                echo br(1);
-                echo "Last Name : " . $user['lastname'];
-                echo br(3);
-
-                echo anchor('user/update', 'Update');
-                echo br(2);
-            ?>
-
-        </div>
-    </div>
         <?php
-        /*
             echo heading('User account settings', 3);
             echo validation_errors();
             if (isset($errors['warning'])) {
@@ -51,14 +31,19 @@
             echo anchor('home/account/info', 'Edit');
             echo form_fieldset_close();
 
-            echo form_open();
+            echo form_open('home/edit_account/password');
             echo form_fieldset('Password');
-               echo form_password(array('name' =>'password','placeholder' => '**********', 'readonly' => true));
-               echo anchor('home/account/password', 'Edit');
+               echo form_password(array('name' =>'old_password','placeholder' => 'Enter old Password'));
+               echo form_password(array('name' =>'new_password','placeholder' => 'Enter new password'));
+               echo form_password(array('name' =>'confirm_password','placeholder' => 'Confirm new Password'));
+               echo form_submit('submit', 'Edit');
+               echo anchor('home/account', 'Cancel');
             echo form_fieldset_close();
-
             echo br(2);
             echo anchor('calendar', 'Back to Dashboard')
-            */
         ?>
+        <br />
+        </div>
+	</div>
+   <?php echo br(2); ?>
 </div>

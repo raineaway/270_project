@@ -62,6 +62,8 @@ class Calendar_model extends CI_Model {
 
     public function generate_calendar($year, $month){
         $this->load->library('calendar', $this->prefs);
+        //get events
+
         return $this->calendar->generate($year, $month);
     }
 
@@ -139,6 +141,20 @@ class Calendar_model extends CI_Model {
             return TRUE;
         }
     }
+
+              //{cal_cell_no_content}<div class="day_num">{day}</div>{/cal_cell_no_content}
+              //{cal_cell_no_content_today}<div class="highlight">{day}</div>{/cal_cell_no_content_today}
+
+              //{cal_cell_blank}&nbsp;{/cal_cell_blank}
+
+              //{cal_cell_other}{day}{cal_cel_other}
+
+              //{cal_cell_end}</td>{/cal_cell_end}
+              //{cal_cell_end_today}</td>{/cal_cell_end_today}
+              //{cal_cell_end_other}</td>{/cal_cell_end_other}
+              //{cal_row_end}</tr>{/cal_row_end}
+
+              //{table_close}</table>{/table_close}'
 
 }
 ?>
