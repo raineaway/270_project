@@ -5,8 +5,8 @@
 		<p>Login or signup for an account to get started.</p>
 
         <div id="login_form">
-	        <p>Login</p>
         <?php
+            echo heading('Login', 3);
             echo validation_errors();
             if (isset($errors['warning'])) {
                 echo $errors['warning'];

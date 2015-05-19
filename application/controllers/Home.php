@@ -4,6 +4,7 @@ class Home extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        date_default_timezone_set('Asia/Manila');
     }
 
     public function index() {
@@ -11,9 +12,7 @@ class Home extends CI_Controller {
             'title' => 'Scheduler'
         );
         if ($this->session->userdata('username')) {
-            $data['main_content'] = 'logged_in_area';
-            $data['username']     = $this->session->userdata('username');
-            $this->load->view('includes/template', $data);
+            redirect('calendar/show_calendar');
         } else {
             header("Location: " . site_url(array('login')));
         }
@@ -79,6 +78,18 @@ class Home extends CI_Controller {
                 if ($result['status'] == 'success') {
                     $user = $this->user_model->get_by_username($data['username']);
                     $this->session->set_userdata($user);
+
+                   //create default calendar for user
+                   $data = array(
+                      'user_id'        =>  $this->session->userdata('user_id'),
+                      'name'           => 'Default',
+                      'color'          => '#000099', //blue
+                      'date_created'   => date("Y-m-01 00:00:00")
+                   );
+
+                   $this->load->model('calendar_model');
+                   $calresult = $this->calendar_model->create($data);
+
                     header("Location: " . site_url(array('home')));
                 } else {
                     $errors['warning'] = $result['error'];
@@ -90,6 +101,11 @@ class Home extends CI_Controller {
         $this->load->view("includes/template", $data);
         return;
     }
+
+    public function logout(){
+      $this->session->sess_destroy();
+      header("Location: " . site_url(array('home')));
+   }
 }
 
 ?>

@@ -3,9 +3,9 @@
 
     <div id="body">
         <div id="login_form">
-            <p>Create an account
 
             <?php
+                echo heading('Create an account', 3);
                 echo validation_errors();
 
                 echo form_open('signup');
