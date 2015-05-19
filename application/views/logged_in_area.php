@@ -18,7 +18,7 @@
 				echo $calendar; ?>
    </div>
 		<?php
-			echo anchor(site_url(array('home/account')), 'Account Settings') ;
+			echo anchor(site_url(array('user/account')), 'Account Settings') ;
 			echo anchor(site_url(array('home/logout')), 'Logout');
 				?>
 		<br />
