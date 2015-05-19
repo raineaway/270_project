@@ -110,12 +110,31 @@ class Event extends CI_Controller {
         return;
     }
 
-    private function get_calendars() {
+    public function list_all() {
+        $calendars = $this->get_calendars(TRUE);
+        $this->load->model("event_model");
+        
+        if ($this->input->get("date_start", TRUE)) {
+            $date_start = strtotime($this->input->get("date_start", TRUE));
+        } else {
+            $date_start = time();
+        }
+
+        $view = $this->input->get("view", TRUE) ? $this->input->get("view", TRUE) : "month";
+
+        $events = $this->event_model->get_events_by_calendars($calendars, $view, $date_start);
+        $data = array(
+            "events" => $events,
+            "main_content" => ""
+        );
+    }
+
+    private function get_calendars($id_only=FALSE) {
         $this->load->model("calendar_model");
         $query = $this->calendar_model->get_all_calendars_by_user_id($this->session->userdata("user_id"));
         $calendars = array();
         foreach ($query->result_array() as $row) {
-            $calendars[$row['cal_id']] = $row['name'];
+            $calendars[$row['cal_id']] = $id_only ? $row['cal_id'] : $row['name'];
         }
         return $calendars;
     }

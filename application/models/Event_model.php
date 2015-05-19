@@ -83,15 +83,15 @@ class Event_model extends CI_Model {
     public function get_events_by_calendars($calendars, $view, $date_start) {
         // $calendars must be an array of calendar IDs
         $calendars = implode(", ", $calendars);
-
-        if ($view == "month") {
-            $date_start = date("Y-m-01 00:00:00", $date_start);
-            $date_end = date("Y-m-t 23:59:59", strtotime($date_start));
-        } else {
+            
+        if ($view == "week") {
             $date_temp = strtotime("last Sunday", date($date_start));
             $date_start = date("Y-m-d 00:00:00", $date_temp);
             $date_end = strtotime("+6 days", $date_start);
             $date_end = date("Y-m-d 23:59:59", $date_end);
+        } else {
+            $date_start = date("Y-m-01 00:00:00", $date_start);
+            $date_end = date("Y-m-t 23:59:59", strtotime($date_start));
         }
 
         $sql = "SELECT * FROM event WHERE "
