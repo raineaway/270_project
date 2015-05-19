@@ -13,6 +13,7 @@
 				echo form_dropdown('calendars', $calendar_list, 'all');
 				echo $calendar;
 				echo br(3); ?>
+   </div>
 
 		<?php
 			echo anchor(site_url(array('home/account')), 'Account Settings') ;
