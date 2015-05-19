@@ -97,6 +97,9 @@ class Home extends CI_Controller {
             }
         }
 
+        $data['heading'] = 'Create an account';
+        $data['form_action'] = 'signup';
+        $data['submit_button'] = 'Sign Up';
         $data['main_content'] = 'signup.php';
         $this->load->view("includes/template", $data);
         return;

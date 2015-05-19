@@ -46,7 +46,27 @@ class User_model extends CI_Model {
     }
 
     public function update($data) {
-        // update all fields
+        if (!isset($data['user_id']) || empty($data['user_id'])) {
+            return array("status" => "fail", "error" => "user ID is required");
+        }
+
+        $password = md5($data['username'] . ":Scheduler:" . $data['password']);
+
+        $sql = "UPDATE `user` SET "
+            . "lastname = " . $this->db->escape($data['lastname']) . ", "
+            . "firstname = " . $this->db->escape($data['firstname']) . ", "
+            . "username = " . $this->db->escape($data['username']) . ", "
+            . "email_address = " . $this->db->escape($data['email_address']) . ", "
+            . "password = " . $this->db->escape($password)
+            . " WHERE user_id = " . $this->db->escape($data['user_id']);
+
+        $this->db->query($sql);
+        $rows = $this->db->affected_rows();
+
+        if ($rows > 0) {
+            return array("status" => "success");
+        }
+        return array("status" => "fail", "error" => $this->db->_error_message());
     }
 
     public function login($username, $password) {
