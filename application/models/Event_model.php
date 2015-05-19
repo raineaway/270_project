@@ -109,6 +109,26 @@ class Event_model extends CI_Model {
         return $events;
     }
 
+    public function get_by_id($event_id) {
+        $sql = "SELECT * FROM `event` WHERE event_id = " . $this->db->escape($event_id);
+        $query = $this->db->query($sql);
+
+        foreach ($query->result_array() as $row) {
+            return $row;
+        }
+        return NULL;
+    }
+
+    public function delete_by_id($event_id) {
+        $sql = "DELETE FROM `event` WHERE event_id = " . $this->db->escape($event_id);
+        $this->db->query($sql);
+
+        if ($this->db->affected_rows() < 1) {
+            return array("status" => "fail", "error" => $this->db->_error_message());
+        }
+        return TRUE;
+    }
+
 }
 
 ?>
