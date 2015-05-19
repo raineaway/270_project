@@ -15,6 +15,7 @@ class Event extends CI_Controller {
    }
 
    public function new_event(){
+      $errors = array();
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
          $this->form_validation->set_rules('name', 'Event Name', 'required');
          $this->form_validation->set_rules('start_date', 'Start Date', 'required');
@@ -41,7 +42,14 @@ class Event extends CI_Controller {
                 $errors['warning'] = $result['error'];
             }
 
-         }*/
+         } else {
+            $data = array(
+                'errors'       => $errors,
+                'main_content' => 'event_form.php'
+            );
+            $this->load->view("includes/template", $data);
+            return;
+         }
       }
 
    }
