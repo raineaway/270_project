@@ -27,7 +27,12 @@
                     </div>
                 </div>
             <?php } ?>
-            <br/><br/>
+            <?php echo br(5); ?>
         </div>
+        <?php
+        echo br(2);
+        echo anchor(site_url(array('home')), 'Dashboard') ; ?>
     </div>
+    <?php
+    echo br(2); ?>
 </div>

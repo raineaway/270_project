@@ -36,7 +36,8 @@ class Calendar_model extends CI_Model {
 
                 {cal_cell_content}
                 <div class="day_num">{day}</div>
-                    <div class="content">{content}</div>
+                    <div class="content">{content}
+                    </div>
                     {/cal_cell_content}
                 {cal_cell_content_today}
                 <div class="highlight">{day}</div>
@@ -60,11 +61,32 @@ class Calendar_model extends CI_Model {
 
     }
 
-    public function generate_calendar($year, $month){
-        $this->load->library('calendar', $this->prefs);
-        //get events
+    public function generate_calendar($year = null, $month = null) {
+        if (!$year) { $year = date('Y'); }
+        if (!$month) { $month = date('m'); }
 
-        return $this->calendar->generate($year, $month);
+        $this->load->library('calendar', $this->prefs);
+        $events = array();
+
+        //get events from DB for month, year for 1 calendar Id
+        $date = new DateTime(); $date->setDate($year, $month, 1); $date->setTime(00, 00, 00);
+        $this->load->model('event_model');
+        $result = $this->event_model->get_events_by_calendar(2, 'month', $date->getTimestamp() );
+
+        foreach( $result as $row ) {
+           $details = null;
+          list($year, $month, $day, $hour) = array_values(date_parse($row['date_start']));
+
+          //need help to conver the hour to G:i A format
+          if (!$row['is_all_day']) {
+             $details = $hour . "  ". $row['name'];
+          } else {
+             $details = $row['name'];
+          }
+          $events += array($day => $details );
+       }
+
+        return $this->calendar->generate($year, $month, $events);
     }
 
     public function create($data) {

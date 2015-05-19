@@ -4,6 +4,7 @@ class Event_model extends CI_Model {
     public  function __construct() {
         parent::__construct($this->table);
     }
+
     public function create($data) {
         if (!isset($data['name']) || empty($data['name'])) {
             return array("status" => "fail", "error" => "event name is required");
@@ -23,6 +24,7 @@ class Event_model extends CI_Model {
         }
         return array("status" => "fail", "error" => $this->db->_error_message());
     }
+
     public function update($data) {
         if (!isset($data['event_id'])) {
             return array("status" => "fail", "error" => "event ID is required.");
@@ -42,6 +44,7 @@ class Event_model extends CI_Model {
         }
         return array("status" => "fail", "error" => $this->db->_error_message());
     }
+
     public function get_events_by_calendar($cal_id, $view, $date_start) {
         // $date_start must be a unix timestamp
         if ($view == "month") {
@@ -64,6 +67,7 @@ class Event_model extends CI_Model {
         }
         return $events;
     }
+
     public function get_events_by_calendars($calendars, $view, $date_start) {
         // $calendars must be an array of calendar IDs
         $calendars = implode(", ", $calendars);
@@ -88,6 +92,7 @@ class Event_model extends CI_Model {
         }
         return $events;
     }
+
     public function get_by_id($event_id) {
         $sql = "SELECT * FROM `event` WHERE event_id = " . $this->db->escape($event_id);
         $query = $this->db->query($sql);
@@ -96,6 +101,7 @@ class Event_model extends CI_Model {
         }
         return NULL;
     }
+
     public function delete_by_id($event_id) {
         $sql = "DELETE FROM `event` WHERE event_id = " . $this->db->escape($event_id);
         $this->db->query($sql);
