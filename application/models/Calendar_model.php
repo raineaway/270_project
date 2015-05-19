@@ -74,16 +74,13 @@ class Calendar_model extends CI_Model {
         if (!isset($data['color']) || empty($data['color'])) {
             return array("status" => "fail", "error" => "calendar color is required");
         }
-
         $sql = "INSERT INTO `calendar` (user_id, name, color, date_created) "
             . "VALUES (" . $this->db->escape($data['user_id']) . ", "
             . $this->db->escape($data['name']) . ", "
             . $this->db->escape($data['color']) . ", "
             . $this->db->escape($data['date_created']) . ")";
-
         $this->db->query($sql);
         $rows = $this->db->affected_rows();
-
         if ($rows > 0) {
             return array("status" => "success");
         }
@@ -94,15 +91,12 @@ class Calendar_model extends CI_Model {
         if (!isset($data['cal_id']) || empty($data['cal_id'])) {
             return array("status" =>"fail", "error" => "calendar ID is required");
         }
-
         $sql = "UPDATE `calendar` SET "
             . "name = " . $this->db->escape($data['name']) . ", "
             . "color = " . $this->db->escape($data['color'])
             . " WHERE cal_id = " . $this->db->escape($data['cal_id']);
-
         $this->db->query($sql);
         $rows = $this->db->affected_rows();
-
         if ($rows > 0) {
             return array("status" => "success");
         }
@@ -112,7 +106,6 @@ class Calendar_model extends CI_Model {
     public function get_by_id($cal_id) {
         $sql = "SELECT * FROM calendar WHERE cal_id = " . $this->db->escape($cal_id);
         $query = $this->db->query($sql);
-
         foreach ($query->result_array() as $row) {
             return $row;
         }
@@ -120,19 +113,18 @@ class Calendar_model extends CI_Model {
     }
 
     public function get_all_calendars_by_user_id($user_id){
-        $sql = "SELECT * FROM `calendar` WHERE user_id = " . $this->db->escape($user_id) . "";
-        return $this->db->query($sql);
+      $sql = "SELECT * FROM `calendar` WHERE user_id = " . $this->db->escape($user_id) . "";
+      return $this->db->query($sql);
     }
 
     public function delete_by_id($cal_id) {
         $this->db->trans_begin();
-
         $sql = "DELETE FROM `event` WHERE cal_id = " . $this->db->escape($cal_id);
-        $this->db->query($sql);
 
+        $this->db->query($sql);
         $sql = "DELETE FROM `calendar` WHERE cal_id = " . $this->db->escape($cal_id);
-        $this->db->query($sql);
 
+        $this->db->query($sql);
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollbak();
             return array("status" => "fail", "error" => $this->db->_error_message());
@@ -141,20 +133,5 @@ class Calendar_model extends CI_Model {
             return TRUE;
         }
     }
-
-              //{cal_cell_no_content}<div class="day_num">{day}</div>{/cal_cell_no_content}
-              //{cal_cell_no_content_today}<div class="highlight">{day}</div>{/cal_cell_no_content_today}
-
-              //{cal_cell_blank}&nbsp;{/cal_cell_blank}
-
-              //{cal_cell_other}{day}{cal_cel_other}
-
-              //{cal_cell_end}</td>{/cal_cell_end}
-              //{cal_cell_end_today}</td>{/cal_cell_end_today}
-              //{cal_cell_end_other}</td>{/cal_cell_end_other}
-              //{cal_row_end}</tr>{/cal_row_end}
-
-              //{table_close}</table>{/table_close}'
-
 }
 ?>

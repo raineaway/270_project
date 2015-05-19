@@ -12,18 +12,14 @@ class Calendar extends CI_Controller {
 
     public function show_calendar($year=null, $month=null){
         $this->check_session();
-
         $this->load->model('calendar_model');
         $data['calendar'] = $this->calendar_model->generate_calendar($year, $month);
         $data['username'] = $this->session->userdata('username');
         $data['calendar_list'] = array();
-
         $query = $this->calendar_model->get_all_calendars_by_user_id($this->session->userdata('user_id'));
-
         foreach($query->result() as $row){
             $data['calendar_list'] += array($row->cal_id => $row->name);
         }
-
         $data['main_content'] = 'logged_in_area';
         $this->load->view('includes/template', $data);
     }
