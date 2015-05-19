@@ -61,6 +61,55 @@ class Event extends CI_Controller {
         return;
     }
 
+    public function update() {
+        $errors = array();
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $this->form_validation->set_rules('event_id', 'Event ID', 'required');
+            $this->form_validation->set_rules('name', 'Event Name', 'required');
+            $this->form_validation->set_rules('date_start', 'Start Date', 'required');
+            $this->form_validation->set_rules('date_end', 'End Date', 'required');
+
+            if($this->form_validation->run() == TRUE) {
+                $dates = $this->check_date($this->input->post('date_start'), $this->input->post('date_end'),
+                    $this->input->post('time_start'), $this->input->post('time_end'));
+
+                if ($dates === FALSE) {
+                    $errors['date_start'] = "Start date must be less than End date.";
+                } else {
+                    $is_all_day = $this->input->post("is_all_day", TRUE) ? 1 : 0;
+                    $data = array(
+                        'event_id'        => $this->input->post("event_id", TRUE),
+                        'name'            => $this->input->post("name", TRUE),
+                        'is_all_day'      => $is_all_day,
+                        'date_start'      => $dates['start'],
+                        'date_end'        => $dates['end'],
+                        'cal_id'          => $this->input->post("cal_id", TRUE),
+                        'recurrence_type' => $this->input->post("recurrence_type", TRUE),
+                        'date_created'    => date("Y-m-d H:i:s")
+                    );
+
+                    $this->load->model('event_model');
+                    $result = $this->event_model->update($data);
+
+                    if ($result['status'] == 'success') {
+                        $this->session->set_flashdata("succcess", "You have successfully modified your event.");
+                        header("Location: " . site_url(array('calendar')));
+                    } else {
+                        $errors['warning'] = $result['error'];
+                    }
+                }
+            }
+        }
+        $data = array(
+            'errors'       => $errors,
+            'main_content' => 'event_form.php',
+            'calendars'    => $this->get_calendars()
+        );
+
+        $this->load->view("includes/template", $data);
+        return;
+    }
+
     private function get_calendars() {
         $this->load->model("calendar_model");
         $query = $this->calendar_model->get_all_calendars_by_user_id($this->session->userdata("user_id"));
