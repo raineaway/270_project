@@ -1,9 +1,11 @@
 <div id="container">
     <h1>Welcome to Skedjul!</h1>
 
+
 	<div id="body">
         <div id="login_form">
         <?php
+
             echo heading('User account settings', 3);
             echo validation_errors();
             if (isset($errors['warning'])) {
@@ -38,7 +40,7 @@
             echo form_fieldset_close();
 
             echo br(2);
-            echo anchor('calendar', 'Back to Dashboard')
+            echo anchor('calendar', 'Back to Dashboard');
         ?>
         <br />
         </div>

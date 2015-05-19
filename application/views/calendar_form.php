@@ -5,24 +5,24 @@
         <div id="login_form">
 
             <?php
-                echo heading('Create new calendar', 3);
+                echo heading($heading, 3);
                 echo validation_errors();
 
-                echo form_open('calendar/new_calendar');
+                echo form_open($form_action);
 
                 echo form_input(array(
                     'name'        => 'name',
                     'placeholder' => 'Calendar Name',
-                    'value'       => set_value('name')));
+                    'value'       => set_value('name', isset($calendar['name']) ? $calendar['name'] : '')));
                 echo form_input(array(
                     'name'        => 'color',
                     'type'        => 'color',
                     'placeholder' => 'Color',
-                    'value'       => set_value('color')));
+                    'value'       => set_value('color', isset($calendar['color']) ? $calendar['color'] : '')));
 
 
-               echo form_submit('submit', 'Create Calendar');
-               echo anchor('calendar', 'Cancel')
+               echo form_submit('submit', $submit_button);
+               echo anchor('calendar/list_all', 'Cancel')
             ?>
 
         </div>
