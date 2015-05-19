@@ -18,7 +18,7 @@ class Event_model extends CI_Model {
            . $this->db->escape($data['date_start']) . ", "
            . $this->db->escape($data['date_end']) . ", "
            . $this->db->escape($data['recurrence_type']) . ", "
-           . $this->db->escape($data['cal-id']) . ", "
+           . $this->db->escape($data['cal_id']) . ", "
            . $this->db->escape($data['date_created']) . ")";
 
       $this->db->query($sql);

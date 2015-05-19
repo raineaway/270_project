@@ -15,9 +15,9 @@
             echo form_input(array('name' =>'username','placeholder' => 'Username'));
             echo form_password(array('name' =>'password','placeholder' => 'Password'));
             echo form_submit('submit', 'Login');
-            echo anchor('signup', 'Signup for an account')
+            echo anchor('signup', 'Signup for an account');
         ?>
-        <br />
         </div>
+        <?php echo br(2);?>
 	</div>
 </div>

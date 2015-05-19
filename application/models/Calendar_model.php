@@ -62,6 +62,8 @@ class Calendar_model extends CI_Model {
 
    public function generate_calendar($year, $month){
       $this->load->library('calendar', $this->prefs);
+      //get events
+
       return $this->calendar->generate($year, $month);
    }
 

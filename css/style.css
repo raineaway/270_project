@@ -55,7 +55,7 @@ p.footer {
 }
 
 #login_form {
-	width: 300px;
+	width: 25%;
 	background: #f0f0f0;
 	border: 1px solid white;
 	margin: 25px 50 0 50 0;
@@ -71,6 +71,7 @@ input[type=text], input[type=password] {
 	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
 	padding: 1em;
+   font-color: blue;
 }
 
 input[type=submit], form a, a {
