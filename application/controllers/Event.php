@@ -6,15 +6,20 @@ class Event extends CI_Controller {
     }
 
     public function index(){
+        redirect('calendar/show_calendar');
     }
 
     public function form(){
+        $this->check_session();
+
         $data['calendars'] = $this->get_calendars();
         $data['main_content'] = 'event_form';
         $this->load->view('includes/template', $data);
     }
 
     public function new_event(){
+        $this->check_session();
+
         $errors = array();
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $this->form_validation->set_rules('name', 'Event Name', 'required');
@@ -62,6 +67,8 @@ class Event extends CI_Controller {
     }
 
     public function update() {
+        $this->check_session();
+
         $errors = array();
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $this->form_validation->set_rules('event_id', 'Event ID', 'required');
@@ -111,6 +118,8 @@ class Event extends CI_Controller {
     }
 
     public function list_all() {
+        $this->check_session();
+
         $calendars = $this->get_calendars(TRUE);
         $this->load->model("event_model");
         
@@ -147,6 +156,12 @@ class Event extends CI_Controller {
             return FALSE;
         }
         return array("start" => $start, "end" => $end);
+    }
+
+    private function check_session() {
+        if (!$this->session->userdata('username')) {
+            header("Location: " . site_url(array('login')));
+        }
     }
 }
 ?>
