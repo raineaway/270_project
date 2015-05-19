@@ -22,6 +22,13 @@ class Event extends CI_Controller {
          $this->form_validation->set_rules('end_date', 'End Date', 'required');
 
 
+         $date = $this->input->post("date_start");
+         $time = $this->input->post("time_start");
+
+         // Solution 1, merge objects to new object:
+         $date_start = new DateTime($date->format('Y-m-d') .' ' .$time->format('H:i:s'));
+         echo $date_start->format('Y-m-d H:i:s'); // Outputs '2017-03-14 13:37:42'
+
          if($this->form_validation->run() == TRUE) {
             $data = array(
               'name'             => $this->session->userdata('name'),
