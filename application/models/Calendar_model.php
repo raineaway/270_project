@@ -71,21 +71,34 @@ class Calendar_model extends CI_Model {
         //get events from DB for month, year for 1 calendar Id
         $date = new DateTime(); $date->setDate($year, $month, 1); $date->setTime(00, 00, 00);
         $this->load->model('event_model');
+
+        //get list of calendar_ids
+
+
         $result = $this->event_model->get_events_by_calendar(2, 'month', $date->getTimestamp() );
 
         foreach( $result as $row ) {
-           $details = null;
-          list($year, $month, $day, $hour) = array_values(date_parse($row['date_start']));
 
-          //need help to conver the hour to G:i A format
+          list($year, $month, $day, $hour) = array_values(date_parse($row['date_start']));
+          $details = null;
+          $day = (int)$day;
+
+          //need help to convert the $hour to G:i A format
           if (!$row['is_all_day']) {
              $details = $hour . "  ". $row['name'];
           } else {
              $details = $row['name'];
           }
-          $events += array($day => $details );
+
+          if (isset($events[$day])){
+             $events[$day] .= "<br/>" .$details;
+           } else {
+             $events += array($day => $details );
+          }
+
        }
 
+        print_r($events);
         return $this->calendar->generate($year, $month, $events);
     }
 
