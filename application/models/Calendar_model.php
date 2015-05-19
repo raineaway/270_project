@@ -88,8 +88,9 @@ class Calendar_model extends CI_Model {
       return array("status" => "fail", "error" => $this->db->_error_message());
    }
 
-   public function get_events(){
-
+   public function get_all_calendars_by_user_id($user_id){
+      $sql = "SELECT * FROM `calendar` WHERE user_id = " . $this->db->escape($user_id) . "";
+      return $this->db->query($sql);
    }
 }
 ?>
