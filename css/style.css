@@ -84,7 +84,7 @@ input[type=text], input[type=password] {
    font-color: blue;
 }
 
-input[type=submit], form a, a {
+input[type=submit], form a, a, .buttonlink {
 	border: none;
 	margin-right: 1em;
 	padding: 6px;
@@ -146,6 +146,14 @@ table.calendar {
 	color: white;
 }
 
+.calendar .day_num span {
+   color: #287368;
+   font-weight: normal;
+   text-align: right;
+   display: block;
+   font-size: 14px;
+   padding: 2px 5px 0 0px;
+}
 
 tr {
    font-weight: bold;
