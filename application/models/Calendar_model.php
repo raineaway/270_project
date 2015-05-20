@@ -39,12 +39,11 @@ class Calendar_model extends CI_Model {
                 <span>
                 <a href="http://localhost/270_project/index.php/event/{day}">{day}</a></span>
                 </div>
-
                     <div class="content">{content}
                     </div>
                     {/cal_cell_content}
                 {cal_cell_content_today}
-                <div class="highlight">{day}</div>
+                <div class="highlight"><a href="http://localhost/270_project/index.php/event/{day}">{day}</a></div>
                     <div class="content">{content}</div>
                     {/cal_cell_content_today}
 
