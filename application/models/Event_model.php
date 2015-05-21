@@ -113,8 +113,8 @@ class Event_model extends CI_Model {
             } else if ($row['recurrence_type'] == 'yearly') {           // check if yearly event falls within date range
                 if ($row['date_start'] <= $date_end) {
                     $this_year = date("Y");
-                    $start = date("$this_year-m-d 00:00:00", strtotime($row['date_start']));
-                    $end = date("$this_year-m-d 00:00:00", strtotime($row['date_end']));
+                    $start = date("$this_year-m-d H:i:s", strtotime($row['date_start']));
+                    $end = date("$this_year-m-d H:i:s", strtotime($row['date_end']));
                     if ($start >= $date_start || $end <= $date_end) {
                         $row['date_start'] = $start;
                         $row['date_end'] = $end;
@@ -125,15 +125,33 @@ class Event_model extends CI_Model {
                 if ($row['date_start'] <= $date_end) {
                     $this_month = date("m");
                     $this_year = date("Y");
-                    $start = date("$this_year-$this_month-d", strtotime($row['date_start']));
-                    $end = date("$this_year-$this_month-d", strtotime($row['date_end']));
+                    $start = date("$this_year-$this_month-d H:i:s", strtotime($row['date_start']));
+                    $end = date("$this_year-$this_month-d  H:i:s", strtotime($row['date_end']));
                     if ($start >= $date_start || $end <= $date_end) {
                         $row['date_start'] = $start;
                         $row['date_end'] = $end;
                         $final[] = $row;
                     }
                 }
-            } 
+            } else if ($row['recurrence_type'] == 'weekly') {       // check if weekly event falls within date range
+                if ($row['date_start'] <= $date_end) {
+                    while(TRUE) {
+                        if (($row['date_start'] >= $date_start && $row['date_start'] <= $date_end)
+                            || ($row['date_end'] <= $date_end && $row['date_end'] >= $date_start)) {
+
+                            $final[] = $row;
+                        }
+                        $next_start = strtotime("+7 days", $row['date_start']);
+                        $next_end = strtotime("+7 days", $row['date_end']);
+                        $row['date_start'] = date("Y-m-d H:i:s", $next_start);
+                        $row['date_end'] = date("Y-m-d H:i:s", $next_end);
+
+                        if ($row['date_start'] > $date_end) {
+                            break;
+                        }
+                    }
+                }
+            }
         }
         return $final;
     }
