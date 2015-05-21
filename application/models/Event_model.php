@@ -53,17 +53,18 @@ class Event_model extends CI_Model {
             $date_end = strtotime("+6 days", strtotime($date_start));
             $date_end = date("Y-m-d 23:59:59", $date_end);
         }
+
         $sql = "SELECT * FROM event WHERE "
             . "cal_id = " . $this->db->escape($cal_id)
-            . " AND date_start >= " . $this->db->escape($date_start)
-            . " AND date_end <= " . $this->db->escape($date_end);
+            . " AND (date_start >= " . $this->db->escape($date_start)   // OR end date, to accommodate events
+            . " OR date_end <= " . $this->db->escape($date_end) . ")"   // ending within date range
+            . " OR recurrence_type != 'never'";                         // Fetch recurring events
         $query = $this->db->query($sql);
-        $events = array();
-        foreach ($query->result_array() as $row) {
-            $events[] = $row;
-        }
+
+        $events = $this->check_recurring($query->result_array(), $date_start, $date_end);
         return $events;
     }
+
     public function get_events_by_calendars($calendars, $view, $date_start) {
         // $calendars must be an array of calendar IDs
         $calendars = implode(", ", $calendars);
@@ -82,12 +83,10 @@ class Event_model extends CI_Model {
             . " AND date_start >= " . $this->db->escape($date_start)
             . " AND date_end <= " . $this->db->escape($date_end);
         $query = $this->db->query($sql);
-        $events = array();
-        foreach ($query->result_array() as $row) {
-            $events[] = $row;
-        }
+        $events = $this->check_recurring($query->result_array(), $date_start, $date_end);
         return $events;
     }
+
     public function get_by_id($event_id) {
         $sql = "SELECT * FROM `event` WHERE event_id = " . $this->db->escape($event_id);
         $query = $this->db->query($sql);
@@ -96,6 +95,7 @@ class Event_model extends CI_Model {
         }
         return NULL;
     }
+
     public function delete_by_id($event_id) {
         $sql = "DELETE FROM `event` WHERE event_id = " . $this->db->escape($event_id);
         $this->db->query($sql);
@@ -103,6 +103,39 @@ class Event_model extends CI_Model {
             return array("status" => "fail", "error" => $this->db->_error_message());
         }
         return TRUE;
+    }
+
+    private function check_recurring($events, $date_start, $date_end) {
+        $final = array();
+        foreach ($events as $row) {
+            if ($row['recurrence_type'] == 'never') {
+                $final[] = $row;
+            } else if ($row['recurrence_type'] == 'yearly') {           // check if yearly event falls within date range
+                if ($row['date_start'] <= $date_end) {
+                    $this_year = date("Y");
+                    $start = date("$this_year-m-d 00:00:00", strtotime($row['date_start']));
+                    $end = date("$this_year-m-d 00:00:00", strtotime($row['date_end']));
+                    if ($start >= $date_start || $end <= $date_end) {
+                        $row['date_start'] = $start;
+                        $row['date_end'] = $end;
+                        $final[] = $row;
+                    }
+                }
+            } else if ($row['recurrence_type'] == 'monthly') {      // check if monthly event falls within date range
+                if ($row['date_start'] <= $date_end) {
+                    $this_month = date("m");
+                    $this_year = date("Y");
+                    $start = date("$this_year-$this_month-d", strtotime($row['date_start']));
+                    $end = date("$this_year-$this_month-d", strtotime($row['date_end']));
+                    if ($start >= $date_start || $end <= $date_end) {
+                        $row['date_start'] = $start;
+                        $row['date_end'] = $end;
+                        $final[] = $row;
+                    }
+                }
+            } 
+        }
+        return $final;
     }
 }
 ?>
