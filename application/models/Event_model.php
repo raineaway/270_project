@@ -47,11 +47,14 @@ class Event_model extends CI_Model {
         if ($view == "month") {
             $date_start = date("Y-m-01 00:00:00", $date_start);
             $date_end = date("Y-m-t 23:59:59", strtotime($date_start));
-        } else {
+        } else if ($view == "week") {
             $date_temp = strtotime("last Sunday", date($date_start));
             $date_start = date("Y-m-d 00:00:00", $date_temp);
             $date_end = strtotime("+6 days", strtotime($date_start));
             $date_end = date("Y-m-d 23:59:59", $date_end);
+        } else if ($view == "day") {
+            $date_start = date("Y-m-d 00:00:00", $date_start);
+            $date_end = date("Y-m-d 23:59:59", $date_start);
         }
 
         $sql = "SELECT * FROM event WHERE "
