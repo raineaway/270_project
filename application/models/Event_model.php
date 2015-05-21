@@ -108,10 +108,10 @@ class Event_model extends CI_Model {
     private function check_recurring($events, $date_start, $date_end) {
         $final = array();
         foreach ($events as $row) {
-            if ($row['recurrence_type'] == 'never') {
-                $final[] = $row;
-            } else if ($row['recurrence_type'] == 'yearly') {           // check if yearly event falls within date range
-                if ($row['date_start'] <= $date_end) {
+            if ($row['date_start'] < $date_end) {
+                if ($row['recurrence_type'] == 'never') {
+                    $final[] = $row;
+                } else if ($row['recurrence_type'] == 'yearly') {           // check if yearly event falls within date range
                     $this_year = date("Y");
                     $start = date("$this_year-m-d H:i:s", strtotime($row['date_start']));
                     $end = date("$this_year-m-d H:i:s", strtotime($row['date_end']));
@@ -120,9 +120,7 @@ class Event_model extends CI_Model {
                         $row['date_end'] = $end;
                         $final[] = $row;
                     }
-                }
-            } else if ($row['recurrence_type'] == 'monthly') {      // check if monthly event falls within date range
-                if ($row['date_start'] <= $date_end) {
+                } else if ($row['recurrence_type'] == 'monthly') {      // check if monthly event falls within date range
                     $this_month = date("m");
                     $this_year = date("Y");
                     $start = date("$this_year-$this_month-d H:i:s", strtotime($row['date_start']));
@@ -132,10 +130,8 @@ class Event_model extends CI_Model {
                         $row['date_end'] = $end;
                         $final[] = $row;
                     }
-                }
-            } else if ($row['recurrence_type'] == 'weekly') {       // check if weekly event falls within date range
-                if ($row['date_start'] <= $date_end) {
-                    while(TRUE) {
+                } else if ($row['recurrence_type'] == 'weekly') {       // check if weekly event falls within date range
+                    while (TRUE) {
                         if (($row['date_start'] >= $date_start && $row['date_start'] <= $date_end)
                             || ($row['date_end'] <= $date_end && $row['date_end'] >= $date_start)) {
 
@@ -150,8 +146,23 @@ class Event_model extends CI_Model {
                             break;
                         }
                     }
+                } else if ($row['recurrence_type'] == 'daily') {
+                    while (TRUE) {
+                        if (($row['date_start'] >= $date_start && $row['date_start'] <= $date_end)
+                            || ($row['date_end'] <= $date_end && $row['date_end'] >= $date_start)) {
+
+                            $final[] = $row;
+                        }
+                        $next_start = strtotime("+1 day", $row['date_start']);
+                        $next_end = strtotime("+1 day", $row['date_end']);
+                        $row['date_start'] = date("Y-m-d H:i:s", $next_start);
+                        $row['date_end'] = date("Y-m-d H:i:s", $next_end);
+
+                        if ($row['date_start'] > $date_end) {
+                            break;
+                        }
+                    }
                 }
-            }
         }
         return $final;
     }
