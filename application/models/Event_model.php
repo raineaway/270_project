@@ -97,6 +97,11 @@ class Event_model extends CI_Model {
         return $events;
     }
 
+    public function get_events_by_date(){
+      //get user_id?
+
+   }
+
     public function get_by_id($event_id) {
         $sql = "SELECT * FROM `event` WHERE event_id = " . $this->db->escape($event_id);
         $query = $this->db->query($sql);
