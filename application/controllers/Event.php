@@ -10,6 +10,21 @@ class Event extends CI_Controller {
         redirect('calendar/show_calendar');
     }
 
+    public function event_day(){
+        $this->check_session();
+
+
+        $year = $this->uri->segment(2);
+        $month = $this->uri->segment(3);
+        $day = $this->uri->segment(4);
+
+        //get daily event
+        $data['username'] = $this->session->userdata('username');
+        $data['main_content'] = 'event';
+        $this->load->view('includes/template', $data);
+    }
+
+
     public function form(){
         $this->check_session();
         $data['calendars'] = $this->get_calendars();
