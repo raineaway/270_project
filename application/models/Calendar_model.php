@@ -35,15 +35,19 @@ class Calendar_model extends CI_Model {
                 {cal_cell_start_other}<td class="other-month">{/cal_cell_start_other}
 
                 {cal_cell_content}
-                <div class="day_num">{day}</div>
-                    <div class="content">{content}</div>
+                <div class="day_num">
+                <span>
+                <a href="http://localhost/270_project/index.php/event/{day}">{day}</a></span>
+                </div>
+                    <div class="content">{content}
+                    </div>
                     {/cal_cell_content}
                 {cal_cell_content_today}
-                <div class="highlight">{day}</div>
+                <div class="highlight"><a href="http://localhost/270_project/index.php/event/{day}">{day}</a></div>
                     <div class="content">{content}</div>
                     {/cal_cell_content_today}
 
-                {cal_cell_no_content}<div class="day_num">{day}</div>{/cal_cell_no_content}
+                {cal_cell_no_content}<div class="day_num"><span>{day}</span></div>{/cal_cell_no_content}
                 {cal_cell_no_content_today}<div class="highlight">{day}</div>{/cal_cell_no_content_today}
 
                 {cal_cell_blank}&nbsp;{/cal_cell_blank}
@@ -60,11 +64,69 @@ class Calendar_model extends CI_Model {
 
     }
 
-    public function generate_calendar($year, $month){
-        $this->load->library('calendar', $this->prefs);
-        //get events
+    public function generate_calendar($year = null, $month = null) {
+        if (!$year) { $year = date('Y'); }
+        if (!$month) { $month = date('m'); }
 
-        return $this->calendar->generate($year, $month);
+        $this->load->library('calendar', $this->prefs);
+        $events = array();
+
+        //get events from DB for month, year for 1 calendar Id
+        $date = new DateTime(); $date->setDate($year, $month, 1); $date->setTime(00, 00, 00);
+        $this->load->model('event_model');
+
+        //get an array of calendar_ids
+        $calendar_ids = $this->get_all_calendar_ids_by_user_id($this->session->userdata('user_id'));
+        $events_all = $this->event_model->get_events_by_calendars($calendar_ids, 'month', $date->getTimestamp());
+
+        $details_all = array();
+
+        foreach($events_all as $row){
+           //get date
+           list($year, $month, $day, $h, $min) = array_values(date_parse($row['date_start']));
+           $hour = date("g:iA", strtotime($row['date_start']));
+
+           $day = (int)$day;
+           $details = null;
+
+           //multiple events, single events
+           if (!$row['is_all_day']) {
+             $details = $hour . "  ". $row['name'];
+           } else {
+             $details = $row['name'];
+           }
+           if (isset($details_all[$day])){
+                $details_all[$day] .= "<br/>" . $details;
+           } else {
+                //$details_all += array($day => "<span style=\"color: " . $row['color'] . "\">" . $details . "<span>" );
+                $details_all += array($day => $details);
+           }
+        }
+
+        //get events of all calendar ids
+
+        //get event per id
+        /*$result = $this->event_model->get_events_by_calendar(2, 'month', $date->getTimestamp() );
+        foreach( $result as $row ) {
+          list($year, $month, $day, $hour) = array_values(date_parse($row['date_start']));
+          $details = null;
+          $day = (int)$day;
+
+          //need help to convert the $hour to G:i A format
+          if (!$row['is_all_day']) {
+             $details = $hour . "  ". $row['name'];
+          } else {
+             $details = $row['name'];
+          }
+
+          if (isset($events[$day])){
+             $events[$day] .= "<br/>" . $details;
+           } else {
+             $events += array($day => $details );
+          }
+       }*/
+
+        return $this->calendar->generate($year, $month, $details_all);
     }
 
     public function create($data) {
@@ -116,6 +178,19 @@ class Calendar_model extends CI_Model {
       $sql = "SELECT * FROM `calendar` WHERE user_id = " . $this->db->escape($user_id) . "";
       return $this->db->query($sql);
     }
+
+   //returns an array of calendar ids for a certain user
+    public function get_all_calendar_ids_by_user_id($user_id){
+      $sql = "SELECT cal_id FROM `calendar` WHERE user_id = " . $this->db->escape($user_id) . "";
+      $result = $this->db->query($sql);
+      $calendar_ids = array();
+
+      foreach($result->result_array() as $row){
+         $calendar_ids[] = $row['cal_id'];
+      }
+
+      return $calendar_ids;
+   }
 
     public function delete_by_id($cal_id) {
         $this->db->trans_begin();

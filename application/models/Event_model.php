@@ -4,6 +4,7 @@ class Event_model extends CI_Model {
     public  function __construct() {
         parent::__construct($this->table);
     }
+
     public function create($data) {
         if (!isset($data['name']) || empty($data['name'])) {
             return array("status" => "fail", "error" => "event name is required");
@@ -23,6 +24,7 @@ class Event_model extends CI_Model {
         }
         return array("status" => "fail", "error" => $this->db->_error_message());
     }
+
     public function update($data) {
         if (!isset($data['event_id'])) {
             return array("status" => "fail", "error" => "event ID is required.");
@@ -42,6 +44,7 @@ class Event_model extends CI_Model {
         }
         return array("status" => "fail", "error" => $this->db->_error_message());
     }
+
     public function get_events_by_calendar($cal_id, $view, $date_start) {
         // $date_start must be a unix timestamp
         if ($view == "month") {
