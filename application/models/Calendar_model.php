@@ -71,7 +71,7 @@ class Calendar_model extends CI_Model {
         $this->load->library('calendar', $this->prefs);
         $events = array();
 
-        //get events from DB for month, year for 1 calendar Id
+        //get events from DB for current month, for all calendars
         $date = new DateTime(); $date->setDate($year, $month, 1); $date->setTime(00, 00, 00);
         $this->load->model('event_model');
 
