@@ -25,6 +25,10 @@
 				}
 				$this->table->add_row('Recurrence', ucfirst($row['recurrence_type']));
 				echo $this->table->generate();
+
+				echo br(2);
+				echo anchor(site_url(array('event/update/'.$row['event_id'])), 'Edit Event') ;
+				echo br(2);
 			?>
 
        </div>

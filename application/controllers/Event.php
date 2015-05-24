@@ -89,7 +89,7 @@ class Event extends CI_Controller {
                     );
 
                     $this->load->model('event_model');
-                    $result = $this->event_model->create($data);
+                    $result = $this->event_model->update($data);
 
                     if ($result['status'] == 'success') {
                         $this->session->set_flashdata("succcess", "You have successfully created an event!");
@@ -103,18 +103,20 @@ class Event extends CI_Controller {
         $data = array(
             'errors'       => $errors,
             'main_content' => 'event_form.php',
-            'calendars'    => $this->get_calendars()
+            'calendars'    => $this->get_calendars(),
+            'heading'      => 'Create new event',
+            'form_action'  => 'event/new_event',
+            'submit_button' => 'Create Event'
         );
 
         $this->load->view("includes/template", $data);
         return;
     }
 
-    public function update() {
+    public function update($event_id) {
         $this->check_session();
         $errors = array();
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $this->form_validation->set_rules('event_id', 'Event ID', 'required');
             $this->form_validation->set_rules('name', 'Event Name', 'required');
             $this->form_validation->set_rules('date_start', 'Start Date', 'required');
             $this->form_validation->set_rules('date_end', 'End Date', 'required');
@@ -128,7 +130,7 @@ class Event extends CI_Controller {
                 } else {
                     $is_all_day = $this->input->post("is_all_day", TRUE) ? 1 : 0;
                     $data = array(
-                        'event_id'        => $this->input->post("event_id", TRUE),
+                        'event_id'        => $event_id,
                         'name'            => $this->input->post("name", TRUE),
                         'is_all_day'      => $is_all_day,
                         'date_start'      => $dates['start'],
@@ -150,10 +152,16 @@ class Event extends CI_Controller {
                 }
             }
         }
+        $this->load->model('event_model');
+        $event = $this->event_model->get_by_id($event_id);
         $data = array(
             'errors'       => $errors,
             'main_content' => 'event_form.php',
-            'calendars'    => $this->get_calendars()
+            'calendars'    => $this->get_calendars(),
+            'heading'      => 'Update event',
+            'form_action'  => 'event/update/'.$event_id,
+            'submit_button' => 'Update Event',
+            'event'        => $event
         );
 
         $this->load->view("includes/template", $data);
