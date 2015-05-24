@@ -17,9 +17,23 @@ class Event extends CI_Controller {
         $year = $this->uri->segment(2);
         $month = $this->uri->segment(3);
         $day = $this->uri->segment(4);
+        $user_id = $this->session->userdata('user_id');
 
-        //get daily event
-        $data['username'] = $this->session->userdata('username');
+        $date_start = date('Y-m-d 00:00:00', mktime(0, 0, 0, $month, $day, $year));
+        $date_end = date('Y-m-d 23:59:59', mktime(0, 0, 0, $month, $day, $year));
+
+        //get calendar ids for user
+        $this->load->model('calendar_model');
+        $calendar_ids = $this->calendar_model->get_all_calendar_ids_by_user_id($user_id);
+
+        //get event for a certain day for all calendars of user
+        $this->load->model('event_model');
+        $events = $this->event_model->get_events_by_date($calendar_ids, $date_start, $date_end);
+
+        $data['username'] = $user_id;
+        $data['date'] = $date_start;
+        $data['events'] = $events;
+
         $data['main_content'] = 'event';
         $this->load->view('includes/template', $data);
     }
