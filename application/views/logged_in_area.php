@@ -7,9 +7,10 @@
 
 		<?php	echo "Today is " . date("Y-m-d G:i A"); ?></p>
 		<?php echo br(1);
-		 		echo anchor(site_url(array('event/form')), 'Create New Event');
+		 		echo anchor(site_url(array('event/new_event')), 'Create New Event');
 		 		echo anchor(site_url(array('calendar/new_calendar')), 'Create New Calendar');
 				echo anchor(site_url(array('calendar/list_all')), 'My Calendars');
+				echo anchor(site_url(array('event/list_all')), 'My Events');
 		 		echo br(3);?>
 
 
