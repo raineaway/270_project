@@ -10,21 +10,50 @@ class Event extends CI_Controller {
         redirect('calendar/show_calendar');
     }
 
-    public function event_day(){
+    public function event_day($year, $month, $day){
         $this->check_session();
+        $user_id = $this->session->userdata('user_id');
+        $date_start = date('Y-m-d 00:00:00', mktime(0, 0, 0, $month, $day, $year));
+        $date_end = date('Y-m-d 23:59:59', mktime(0, 0, 0, $month, $day, $year));
 
+        //get calendar ids for user
+        $this->load->model('calendar_model');
+        $calendar_ids = $this->calendar_model->get_all_calendar_ids_by_user_id($user_id);
 
-        $year = $this->uri->segment(2);
-        $month = $this->uri->segment(3);
-        $day = $this->uri->segment(4);
+        //get event for a certain day for all calendars of user
+        $this->load->model('event_model');
+        $events = $this->event_model->get_events_by_date($calendar_ids, $date_start, $date_end);
 
-        //get daily event
-        $data['username'] = $this->session->userdata('username');
-        $data['main_content'] = 'event';
-        $this->load->view('includes/template', $data);
+        $list = array();
+        foreach($events as $row) {
+           if ($row['is_all_day'] == 0){
+             $list[] = anchor(site_url(array('event/detail/' . $row['event_id'])), $row['name']) . " - " . date( 'g:i A', strtotime($row['date_start'])) . " to " . date( 'g:i A', strtotime($row['date_end']));
+          }else {
+             $list[] = anchor(site_url(array('event/detail/' . $row['event_id'])), $row['name']) . " - Whole day event";
+           }
+
+        }
+
+         $data['username'] = $user_id;
+         $data['date'] = $date_start;
+         $data['list'] = $list;
+         $data['main_content'] = 'event';
+         $this->load->view('includes/template', $data);
     }
 
 
+    public function event_detail($id){
+         $this->check_session();
+
+         //get event detail for a certain event_id
+         $this->load->model('event_model');
+         $event = $this->event_model->get_by_id($id);
+
+         $data['row'] = $event;
+         $data['main_content'] = 'event_detail';
+         $this->load->view('includes/template', $data);
+
+    }
     public function form(){
         $this->check_session();
         $data['calendars'] = $this->get_calendars();

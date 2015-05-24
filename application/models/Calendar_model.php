@@ -18,7 +18,7 @@ class Calendar_model extends CI_Model {
     public function generate_calendar($year = null, $month = null) {
       if (!$year) { $year = date('Y'); }
       if (!$month) { $month = date('m'); }
-      
+
       $this->prefs['template'] = (
              '{table_open}<table border="0" cellpadding="0" cellspacing="0" class="calendar">{/table_open}
 
@@ -67,9 +67,6 @@ class Calendar_model extends CI_Model {
 
              {table_close}</table>{/table_close}'
              );
-
-
-
 
         $this->load->library('calendar', $this->prefs);
         $events = array();

@@ -93,14 +93,25 @@ class Event_model extends CI_Model {
 
         $query = $this->db->query($sql);
         $events = $this->check_recurring($query->result_array(), $date_start, $date_end);
-        //$events =    $query->result_array();
+
         return $events;
     }
 
-    public function get_events_by_date(){
-      //get user_id?
+    //return events for a certain day
+    public function get_events_by_date($calendars, $date_start, $date_end){
+        //$calendars must be an array of calendar IDs
+        $calendars = implode(", ", $calendars);
 
-   }
+        $sql = "SELECT * FROM event WHERE "
+            . "cal_id IN (" . $calendars . ")"
+            . " AND date_start >= " . $this->db->escape($date_start)
+            . " AND date_end <= " . $this->db->escape($date_end);
+
+        $query = $this->db->query($sql);
+        $events = $this->check_recurring($query->result_array(), $date_start, $date_end);
+
+        return $events;
+    }
 
     public function get_by_id($event_id) {
         $sql = "SELECT * FROM `event` WHERE event_id = " . $this->db->escape($event_id);
