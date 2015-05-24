@@ -8,5 +8,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap.css" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/css/style.css" type="text/css" media="screen" charset="utf-8">
+
 </head>
    <body>

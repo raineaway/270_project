@@ -4,9 +4,9 @@
          <h1>Welcome to Skedjul!</h1>
          <p>Login or signup for an account to get started.</p>
       </div>
+<div id="body" style="width:100%">
 
-
-	<div id="body">
+	<div style="width:28%; margin: auto">
 
 
         <div class="form-control">
@@ -35,6 +35,8 @@
         ?>
         </div>
      </div>
+
+</div>
         <?php echo br(2);?>
 	</div>
 </div>
