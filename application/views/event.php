@@ -4,8 +4,7 @@
 
 	<div id="body">
 		 <div id="login_form" style="width: 90%; display: block">
-			<p class="lead">
-          <?php echo 'Your event/s for ' . date( 'M d Y - l', strtotime($date)); ?> </p>
+			<p class="lead"> <?= $heading ?></p>
 
 			<?php
 
@@ -15,6 +14,10 @@
 
 
        </div>
+		<?php
+		echo br(2);
+		echo anchor(site_url(array('home')), 'Dashboard') ;
+		?>
 	</div>
 
 

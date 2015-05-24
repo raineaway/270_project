@@ -24,21 +24,18 @@ class Event extends CI_Controller {
         $this->load->model('event_model');
         $events = $this->event_model->get_events_by_date($calendar_ids, $date_start, $date_end);
 
-        $list = array();
-        foreach($events as $row) {
-           if ($row['is_all_day'] == 0){
-             $list[] = anchor(site_url(array('event/detail/' . $row['event_id'])), $row['name']) . " - " . date( 'g:i A', strtotime($row['date_start'])) . " to " . date( 'g:i A', strtotime($row['date_end']));
-          }else {
-             $list[] = anchor(site_url(array('event/detail/' . $row['event_id'])), $row['name']) . " - Whole day event";
-           }
+        $list = $this->prepare_list($events);
 
-        }
+        $data = array(
+           'username'     => $user_id,
+           'date'         => $date_start,
+           'list'         => $list,
+           'type'         => 'day',
+           'heading'      => 'Your event/s for ' . date( 'M d Y - l', strtotime($date_start)),
+           'main_content' => 'event'
+        );
 
-         $data['username'] = $user_id;
-         $data['date'] = $date_start;
-         $data['list'] = $list;
-         $data['main_content'] = 'event';
-         $this->load->view('includes/template', $data);
+        $this->load->view('includes/template', $data);
     }
 
 
@@ -171,7 +168,7 @@ class Event extends CI_Controller {
 
     public function list_all() {
         $this->check_session();
-
+        $errors = array();
         $calendars = $this->get_calendars(TRUE);
         $this->load->model("event_model");
 
@@ -182,13 +179,38 @@ class Event extends CI_Controller {
         }
 
         $view = $this->input->get("view", TRUE) ? $this->input->get("view", TRUE) : "month";
-
         $events = $this->event_model->get_events_by_calendars($calendars, $view, $date_start);
+
+        $list = $this->prepare_list($events);
+
         $data = array(
-            "events" => $events,
-            "main_content" => ""
-        );
+           'errors'       => $errors,
+           'main_content' => 'event',
+           'calendars'    => $calendars,
+           'heading'      => 'All events',
+           'list'         => $list,
+           'type'         => 'all'
+      );
+
+      $this->load->view("includes/template", $data);
+      return;
+
     }
+
+
+    private function prepare_list($events) {
+      $list = array();
+      foreach($events as $row) {
+         if ($row['is_all_day'] == 0){
+           $list[] = anchor(site_url(array('event/detail/' . $row['event_id'])), $row['name']) . " - " . date( 'g:i A', strtotime($row['date_start'])) . " to " . date( 'g:i A', strtotime($row['date_end']));
+        }else {
+           $list[] = anchor(site_url(array('event/detail/' . $row['event_id'])), $row['name']) . " - Whole day event";
+         }
+
+      }
+      return $list;
+
+   }
 
     private function get_calendars($id_only=FALSE) {
         $this->load->model("calendar_model");
