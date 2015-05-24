@@ -10,15 +10,9 @@ class Event extends CI_Controller {
         redirect('calendar/show_calendar');
     }
 
-    public function event_day(){
+    public function event_day($year, $month, $day){
         $this->check_session();
-
-
-        $year = $this->uri->segment(2);
-        $month = $this->uri->segment(3);
-        $day = $this->uri->segment(4);
         $user_id = $this->session->userdata('user_id');
-
         $date_start = date('Y-m-d 00:00:00', mktime(0, 0, 0, $month, $day, $year));
         $date_end = date('Y-m-d 23:59:59', mktime(0, 0, 0, $month, $day, $year));
 
@@ -30,15 +24,36 @@ class Event extends CI_Controller {
         $this->load->model('event_model');
         $events = $this->event_model->get_events_by_date($calendar_ids, $date_start, $date_end);
 
-        $data['username'] = $user_id;
-        $data['date'] = $date_start;
-        $data['events'] = $events;
+        $list = array();
+        foreach($events as $row) {
+           if ($row['is_all_day'] == 0){
+             $list[] = anchor(site_url(array('event/detail/' . $row['event_id'])), $row['name']) . " - " . date( 'g:i A', strtotime($row['date_start'])) . " to " . date( 'g:i A', strtotime($row['date_end']));
+          }else {
+             $list[] = anchor(site_url(array('event/detail/' . $row['event_id'])), $row['name']) . " - Whole day event";
+           }
 
-        $data['main_content'] = 'event';
-        $this->load->view('includes/template', $data);
+        }
+
+         $data['username'] = $user_id;
+         $data['date'] = $date_start;
+         $data['list'] = $list;
+         $data['main_content'] = 'event';
+         $this->load->view('includes/template', $data);
     }
 
 
+    public function event_detail($id){
+         $this->check_session();
+
+         //get event detail for a certain event_id
+         $this->load->model('event_model');
+         $event = $this->event_model->get_by_id($id);
+
+         $data['row'] = $event;
+         $data['main_content'] = 'event_detail';
+         $this->load->view('includes/template', $data);
+
+    }
     public function form(){
         $this->check_session();
         $data['calendars'] = $this->get_calendars();
