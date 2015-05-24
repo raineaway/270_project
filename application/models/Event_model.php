@@ -1,4 +1,5 @@
 <?php
+
 class Event_model extends CI_Model {
     private $table = "event";
     public  function __construct() {
@@ -84,14 +85,22 @@ class Event_model extends CI_Model {
             $date_start = date("Y-m-01 00:00:00", $date_start);
             $date_end = date("Y-m-t 23:59:59", strtotime($date_start));
         }
+
         $sql = "SELECT * FROM event WHERE "
             . "cal_id IN (" . $calendars . ")"
             . " AND date_start >= " . $this->db->escape($date_start)
             . " AND date_end <= " . $this->db->escape($date_end);
+
         $query = $this->db->query($sql);
         $events = $this->check_recurring($query->result_array(), $date_start, $date_end);
+        //$events =    $query->result_array();
         return $events;
     }
+
+    public function get_events_by_date(){
+      //get user_id?
+
+   }
 
     public function get_by_id($event_id) {
         $sql = "SELECT * FROM `event` WHERE event_id = " . $this->db->escape($event_id);
@@ -113,6 +122,8 @@ class Event_model extends CI_Model {
 
     private function check_recurring($events, $date_start, $date_end) {
         $final = array();
+        $i = 0;
+
         foreach ($events as $row) {
             if ($row['date_start'] < $date_end) {
                 if ($row['recurrence_type'] == 'never') {
@@ -171,8 +182,10 @@ class Event_model extends CI_Model {
                 }
             }
         }
+     }
         return $final;
     }
+
 }
 
 ?>

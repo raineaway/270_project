@@ -55,3 +55,5 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['login'] = 'home/login';
 $route['signup'] = 'home/signup';
+
+$route['event/(:num)/(:num)/(:num)'] = "event/event_day/$1";
