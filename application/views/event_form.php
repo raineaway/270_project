@@ -2,7 +2,7 @@
     <h1>Welcome to Skedjul!</h1>
 
     <div id="body">
-        <div id="login_form">
+        <div id="login_form" style="width: 90%; display: block;">
             <?php
                 echo heading($heading, 3);
                 echo validation_errors();
