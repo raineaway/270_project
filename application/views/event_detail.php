@@ -1,47 +1,61 @@
 <div id="container">
+	<div class="container">
+      <div class="page-header" style="margin-top: 40px">
+         <h1>Welcome to Skedjul! <small>Hello <?php echo $this->session->userdata('username');?>! You're logged in. </small></h1>
+      </div>
 
-	<h1>Welcome to Skedjul!</h1>
+		<div id="body" style="width:50%">
+			<div style="float:left; display: inline">	<p class="lead">Event Details </p></div>
+			<div style="float:left; display: inline">
+				<?php
+				echo nbs(3);
+				$attributes = array(
+					'class' => 'btn btn-primary',
+					'role'  => 'button'
+				);
+				echo anchor(site_url(array('event/update/'.$row['event_id'])), '<span class="glyphicon glyphicon-pencil"></span>', $attributes) ;
+					echo nbs(2);
+					echo anchor(site_url(array('event/delete_event/' . $row['event_id'])), '<span class="glyphicon glyphicon-trash"></span> ', $attributes);
+				?>
+			</div>
 
-	<div id="body">
-		 <div id="login_form" style="width: 90%; display: block">
-			<p class="lead"> Event Details </p>
+				<?php
+	                if (isset($success)) {
+	                    echo '<div class="success">' . $success . '</div>';
+	                }
 
-			<?php
-                if (isset($success)) {
-                    echo '<div class="success">' . $success . '</div>';
-                }
+						$this->table->set_heading( 'Fields', 'Details' );
+						$this->table->add_row('Event', $row['name']);
 
-				$this->table->set_heading( 'Fields', 'Details' );
-				$this->table->add_row('Event', $row['name']);
+						$this->table->add_row('Is All Day', $row['is_all_day'] ? 'Yes' : 'No');
 
-				$this->table->add_row('Is All Day', $row['is_all_day'] ? 'Yes' : 'No');
+						$this->table->add_row('Start Date', date('Y-m-d', strtotime($row['date_start'])));
+						$this->table->add_row('End Date', date('Y-m-d', strtotime($row['date_end'])));
+		                if (!$row['is_all_day']) {
+							$this->table->add_row('Start Time', date( 'g:i A', strtotime($row['date_start'])));
+							$this->table->add_row('End Time', date( 'g:i A', strtotime($row['date_end'])));
+						}
 
-				$this->table->add_row('Start Date', date('Y-m-d', strtotime($row['date_start'])));
-				$this->table->add_row('End Date', date('Y-m-d', strtotime($row['date_end'])));
-                if (!$row['is_all_day']) {
-					$this->table->add_row('Start Time', date( 'g:i A', strtotime($row['date_start'])));
-					$this->table->add_row('End Time', date( 'g:i A', strtotime($row['date_end'])));
-				}
-				$this->table->add_row('Recurrence', ucfirst($row['recurrence_type']));
-				echo $this->table->generate();
+						$this->table->add_row('Recurrence', ucfirst($row['recurrence_type']));
 
-				echo br(2);
-				echo anchor(site_url(array('event/update/'.$row['event_id'] . "/$previous")), 'Edit Event') ;
-                echo nbs(2);
-                echo anchor(site_url(array('event/delete_event/' . $row['event_id'])) . "/$previous", 'Delete Event');
-				echo br(2);
-			?>
+						$tmpl = array ( 'table_open'  => '<table class="table table-bordered">' );
+						$this->table->set_template($tmpl);
+						echo $this->table->generate();
 
-       </div>
+						$attributes = array(
+							'class' => 'btn btn-primary',
+							'role'  => 'button'
+						);
+
+					?>
+		</div>
+
+		<a class="btn btn-primary" role="button" href="javascript:window.history.go(-1);">Back</a>
+
 		<?php
-		echo br(2);
-		echo anchor(site_url(array('event/' . str_replace("-", "/", $previous))), 'Back to Events List');
-		echo br(1);
-		echo anchor(site_url(array('calendar')), 'Back to Dashboard') ;?>
+		echo nbs(2);
+		echo anchor(site_url(array('home')), 'Dashboard', $attributes) ;
+		echo br(3);
+		?>
 	</div>
-	<?php echo br(2);?>
-<table>
-
-</table>
-
 </div>

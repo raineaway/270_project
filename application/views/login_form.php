@@ -11,10 +11,20 @@
 
         <div class="form-control">
         <?php
-            echo heading('Login', 3);
-            echo validation_errors();
-            if (isset($errors['warning'])) {
+            echo heading('Login', 3); ?>
+               <?php
+                  if(validation_errors()){
+                     echo '<div class="alert alert-warning" role="alert">';
+                     echo validation_errors();
+                     echo '</div>';
+                  }
+               ?>
+
+
+      <?php   if (isset($errors['warning'])) {
+                echo '<div class="alert alert-danger" role="alert">';
                 echo $errors['warning'];
+                echo '</div>';
             }
             $attribute = array('class' => 'form-control');
             echo form_open('login');
