@@ -7,6 +7,10 @@
 			<p class="lead"> Event Details </p>
 
 			<?php
+                if (isset($success)) {
+                    echo '<div class="success">' . $success . '</div>';
+                }
+
 				$this->table->set_heading( 'Fields', 'Details' );
 				$this->table->add_row('Event', $row['name']);
 
@@ -22,13 +26,17 @@
 				echo $this->table->generate();
 
 				echo br(2);
-				echo anchor(site_url(array('event/update/'.$row['event_id'])), 'Edit Event') ;
+				echo anchor(site_url(array('event/update/'.$row['event_id'] . "/$previous")), 'Edit Event') ;
+                echo nbs(2);
+                echo anchor(site_url(array('event/delete_event/' . $row['event_id'])) . "/$previous", 'Delete Event');
 				echo br(2);
 			?>
 
        </div>
 		<?php
 		echo br(2);
+		echo anchor(site_url(array('event/' . str_replace("-", "/", $previous))), 'Back to Events List');
+		echo br(1);
 		echo anchor(site_url(array('calendar')), 'Back to Dashboard') ;?>
 	</div>
 	<?php echo br(2);?>

@@ -43,7 +43,8 @@ class Event_model extends CI_Model {
         if ($rows > 0) {
             return array("status" => "success");
         }
-        return array("status" => "fail", "error" => $this->db->_error_message());
+        //return array("status" => "fail", "error" => $this->db->_error_message());
+        return array("status" => "fail", "error" => "A database error occurred.");
     }
 
     public function get_events_by_calendar($cal_id, $view, $date_start) {
@@ -85,8 +86,8 @@ class Event_model extends CI_Model {
             $date_end = strtotime("+6 days", $date_start);
             $date_end = date("Y-m-d 23:59:59", $date_end);
         } else if ($view == "day") {
-            $date_start = date("Y-m-d 00:00:00", $date_start);
             $date_end = date("Y-m-d 23:59:59", $date_start);
+            $date_start = date("Y-m-d 00:00:00", $date_start);
         }
 
         $sql = "SELECT * FROM event WHERE "
