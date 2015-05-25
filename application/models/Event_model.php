@@ -142,20 +142,32 @@ class Event_model extends CI_Model {
         foreach ($events as $row) {
             if ($row['date_start'] < $date_end) {
                 if ($row['recurrence_type'] == 'never') {
-                    $final[] = $row;
                     $start = date("Y-m-d", strtotime($row['date_start']));
-                    if ($start < date("Y-m-d", strtotime($row['date_end']))) {
-                        $start = date("Y-m-d 00:00:00", strtotime("+1 day", strtotime($start)));
-                        while ($start <= $row['date_end'] || $start <= $date_end) {
-                            $row['date_start'] = $start;
-                            $row['name'] = "(cont'd) " . $row['name'];
-                            if ($start != date("Y-m-d 00:00:00", strtotime($row['date_end']))) {
-                                $row['is_all_day'] = 1;
-                            } else {
-                                $row['ends'] = 1;
-                            }
+                    if (($row['date_start'] >= $date_start && $row['date_start'] <= $date_end)
+                        || ($row['date_end'] >= $date_start && $row['date_end'] <= $date_end)) {
+
+                        if ($start == date("Y-m-d", strtotime($row['date_end'])) && $row['date_start']) {
                             $final[] = $row;
-                            $start = strtotime("+1 day", strtotime($start));
+                        } else {
+                            $start = date("Y-m-d 00:00:00", strtotime($row['date_start']));
+                            $name = $row['name'];
+                            $orig_start = $row['date_start'];
+                            while ($start <= $row['date_end'] && $start <= $date_end) {     //check for spanning events
+                                if ($start >= $date_start) {
+                                    $final[] = $row;
+                                }
+                                $start = date("Y-m-d 00:00:00", strtotime("+1 day", strtotime($start)));
+                                if ($start != date("Y-m-d 00:00:00", strtotime($orig_start))) {
+                                    $row['name'] = "(cont'd) " . $name;
+                                }
+                                if ($start != date("Y-m-d 00:00:00", strtotime($row['date_end']))) {
+                                    $row['is_all_day'] = 1;
+                                } else {
+                                    $row['is_all_day'] = 0;
+                                    $row['ends'] = 1;
+                                }
+                                $row['date_start'] = $start;
+                            }
                         }
                     }
                 } else if ($row['recurrence_type'] == 'yearly') {           // check if yearly event falls within date range

@@ -5,14 +5,14 @@ exit('No direct script access allowed.');
 
 class Calendar_model extends CI_Model {
     private $table = 'calendar';
-    var $prefs;
+    //var $prefs;
 
     public function __construct() {
         parent::__construct($this->table);
-        $this->prefs = array(
-                'show_next_prev'  => TRUE,
-                'next_prev_url'   => site_url(array('calendar/show_calendar'))
-                );
+        //$this->prefs = array(
+                //'show_next_prev'  => TRUE,
+                //'next_prev_url'   => site_url(array('calendar/show_calendar'))
+                //);
     }
 
     public function generate_calendar($year = null, $month = null) {
@@ -20,7 +20,12 @@ class Calendar_model extends CI_Model {
         if (!$month) { $month = date('m'); }
 
         $base_url = $this->config->base_url();
-        $this->prefs['template'] = (
+        /*
+        $prefs = array(
+            'show_next_prev' => TRUE,
+            'next_prev_url'  => site_url('calendar/show_calendar/'),
+        //$this->prefs['template'] = (
+            'template' => 
             '{table_open}<table border="0" cellpadding="0" cellspacing="0" class="calendar">{/table_open}
 
             {heading_row_start}<tr>{/heading_row_start}
@@ -69,7 +74,9 @@ class Calendar_model extends CI_Model {
             {table_close}</table>{/table_close}'
         );
 
-        $this->load->library('calendar', $this->prefs);
+        //$this->load->library('calendar', $this->prefs);
+        $this->load->library('calendar', $prefs);
+        */
         $events = array();
 
         //get events from DB for current month, for all calendars
@@ -109,30 +116,10 @@ class Calendar_model extends CI_Model {
             }
         }
 
-                //get events of all calendar ids
+        return $details_all;
 
-                //get event per id
-                /*$result = $this->event_model->get_events_by_calendar(2, 'month', $date->getTimestamp() );
-                  foreach( $result as $row ) {
-                  list($year, $month, $day, $hour) = array_values(date_parse($row['date_start']));
-                  $details = null;
-                  $day = (int)$day;
-
-                //need help to convert the $hour to G:i A format
-                if (!$row['is_all_day']) {
-                $details = $hour . "  ". $row['name'];
-                } else {
-                $details = $row['name'];
-                }
-
-                if (isset($events[$day])){
-                $events[$day] .= "<br/>" . $details;
-                } else {
-                $events += array($day => $details );
-                }
-                }*/
-
-        return $this->calendar->generate($year, $month, $details_all);
+        //return $this->calendar->generate($year, $month);
+        //return $this->calendar->generate($year, $month, $details_all);
     }
 
     public function create($data) {
