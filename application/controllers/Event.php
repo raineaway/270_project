@@ -28,7 +28,7 @@ class Event extends CI_Controller {
         $list = $this->prepare_list($events, "$year-$month-$day");
 
         $data = array(
-                'username'     => $user_id,
+                'username'     => $this->session->userdata('username'),
                 'date'         => $date_start,
                 'list'         => $list,
                 'type'         => 'day',
