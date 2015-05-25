@@ -100,38 +100,10 @@ class Home extends CI_Controller {
         $data['heading'] = 'Create an account';
         $data['form_action'] = 'signup';
         $data['submit_button'] = 'Sign Up';
-        $data['main_content'] = 'signup.php';
+        $data['main_content'] = 'account_form';
         $this->load->view("includes/template", $data);
         return;
     }
-
-    public function account( $edit=null ){
-      if( $edit == 'info' ){
-         $data['main_content'] = 'account_edit_info.php';
-         $edit = null;
-      } else if ( $edit == 'password' ){
-         $data['main_content'] = 'account_edit_password.php';
-         $edit = null;
-      } else {
-         $data['main_content'] = 'account.php';
-      }
-
-      $this->load->view("includes/template", $data);
-   }
-
-   public function edit_account( $edit=null ) {
-      if( $edit == 'info' ){
-         $edit = null;
-      } else if ( $edit == 'password' ){
-         echo $edit;
-         $edit = null;
-      } else {
-
-      }
-
-      $data['main_content'] = 'account.php';
-      $this->load->view("includes/template", $data);
-   }
 
     public function logout(){
       $this->session->sess_destroy();
