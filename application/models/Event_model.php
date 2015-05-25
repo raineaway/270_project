@@ -76,20 +76,24 @@ class Event_model extends CI_Model {
         // $calendars must be an array of calendar IDs
         $calendars = implode(", ", $calendars);
 
-        if ($view == "week") {
+        if ($view == "month") {
+            $date_start = date("Y-m-01 00:00:00", $date_start);
+            $date_end = date("Y-m-t 23:59:59", strtotime($date_start));
+        } else if ($view == "week") {
             $date_temp = strtotime("last Sunday", date($date_start));
             $date_start = date("Y-m-d 00:00:00", $date_temp);
             $date_end = strtotime("+6 days", $date_start);
             $date_end = date("Y-m-d 23:59:59", $date_end);
-        } else {
-            $date_start = date("Y-m-01 00:00:00", $date_start);
-            $date_end = date("Y-m-t 23:59:59", strtotime($date_start));
+        } else if ($view == "day") {
+            $date_start = date("Y-m-d 00:00:00", $date_start);
+            $date_end = date("Y-m-d 23:59:59", $date_start);
         }
 
         $sql = "SELECT * FROM event WHERE "
             . "cal_id IN (" . $calendars . ")"
-            . " AND date_start >= " . $this->db->escape($date_start)
-            . " AND date_end <= " . $this->db->escape($date_end);
+            . " AND (date_start >= " . $this->db->escape($date_start)   // OR end date, to accommodate events
+            . " OR date_end <= " . $this->db->escape($date_end) . ")"   // ending within date range
+            . " OR recurrence_type != 'never'";                         // Fetch recurring events
 
         $query = $this->db->query($sql);
         $events = $this->check_recurring($query->result_array(), $date_start, $date_end);
@@ -139,6 +143,21 @@ class Event_model extends CI_Model {
             if ($row['date_start'] < $date_end) {
                 if ($row['recurrence_type'] == 'never') {
                     $final[] = $row;
+                    $start = date("Y-m-d", strtotime($row['date_start']));
+                    if ($start < date("Y-m-d", strtotime($row['date_end']))) {
+                        $start = date("Y-m-d 00:00:00", strtotime("+1 day", strtotime($start)));
+                        while ($start <= $row['date_end'] || $start <= $date_end) {
+                            $row['date_start'] = $start;
+                            $row['name'] = "(cont'd) " . $row['name'];
+                            if ($start != date("Y-m-d 00:00:00", strtotime($row['date_end']))) {
+                                $row['is_all_day'] = 1;
+                            } else {
+                                $row['ends'] = 1;
+                            }
+                            $final[] = $row;
+                            $start = strtotime("+1 day", strtotime($start));
+                        }
+                    }
                 } else if ($row['recurrence_type'] == 'yearly') {           // check if yearly event falls within date range
                     $this_year = date("Y");
                     $start = date("$this_year-m-d H:i:s", strtotime($row['date_start']));
@@ -193,7 +212,6 @@ class Event_model extends CI_Model {
                 }
             }
         }
-     }
         return $final;
     }
 

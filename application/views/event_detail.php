@@ -10,18 +10,13 @@
 				$this->table->set_heading( 'Fields', 'Details' );
 				$this->table->add_row('Event', $row['name']);
 
-				if($row['is_all_day'] == 0){
-					$this->table->add_row('Is All Day', 'No');
-					$this->table->add_row('Start Date', $row['date_start']);
-					$this->table->add_row('End Date', $row['date_end']);
+				$this->table->add_row('Is All Day', $row['is_all_day'] ? 'Yes' : 'No');
+
+				$this->table->add_row('Start Date', date('Y-m-d', strtotime($row['date_start'])));
+				$this->table->add_row('End Date', date('Y-m-d', strtotime($row['date_end'])));
+                if (!$row['is_all_day']) {
 					$this->table->add_row('Start Time', date( 'g:i A', strtotime($row['date_start'])));
 					$this->table->add_row('End Time', date( 'g:i A', strtotime($row['date_end'])));
-				} else {
-					$this->table->add_row('Is All Day', 'Yes');
-					$this->table->add_row('Start Date', $row['date_start']);
-					$this->table->add_row('End Date', $row['date_end']);
-					$this->table->add_row('Start Time', '--');
-					$this->table->add_row('End Time', '--');
 				}
 				$this->table->add_row('Recurrence', ucfirst($row['recurrence_type']));
 				echo $this->table->generate();
