@@ -127,6 +127,9 @@ table.calendar {
  background-color: #fff;
 }
 
+th {
+   text-align: center;
+}
 .calendar {
    font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
    font-size: 14px;
