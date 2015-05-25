@@ -13,9 +13,9 @@
 					'class' => 'btn btn-primary',
 					'role'  => 'button'
 				);
-				echo anchor(site_url(array('event/update/'.$row['event_id'] . "/$previous")), '<span class="glyphicon glyphicon-pencil"></span>', $attributes) ;
+				echo anchor(site_url(array('event/update/'.$row['event_id'])), '<span class="glyphicon glyphicon-pencil"></span>', $attributes) ;
 					echo nbs(2);
-					echo anchor(site_url(array('event/delete_event/' . $row['event_id'])) . "/$previous", '<span class="glyphicon glyphicon-trash"></span> ', $attributes);
+					echo anchor(site_url(array('event/delete_event/' . $row['event_id'])), '<span class="glyphicon glyphicon-trash"></span> ', $attributes);
 				?>
 			</div>
 
@@ -50,10 +50,9 @@
 					?>
 		</div>
 
+		<a class="btn btn-primary" role="button" href="javascript:window.history.go(-1);">Back</a>
 
 		<?php
-		echo br(2);
-		echo anchor(site_url(array('event/' . str_replace("-", "/", $previous))), 'Back', $attributes);
 		echo nbs(2);
 		echo anchor(site_url(array('home')), 'Dashboard', $attributes) ;
 		echo br(3);

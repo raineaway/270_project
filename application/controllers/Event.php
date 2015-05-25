@@ -40,16 +40,15 @@ class Event extends CI_Controller {
     }
 
 
-    public function event_detail($id, $previous=""){
+    public function event_detail($event_id){
         $this->check_session();
 
         //get event detail for a certain event_id
         $this->load->model('event_model');
-        $event = $this->event_model->get_by_id($id);
+        $event = $this->event_model->get_by_id($event_id);
 
         $data['row'] = $event;
         $data['main_content'] = 'event_detail';
-        $data['previous'] = $previous;
         if ($this->session->userdata('success')) {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
