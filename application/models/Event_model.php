@@ -92,9 +92,13 @@ class Event_model extends CI_Model {
 
         $sql = "SELECT * FROM event WHERE "
             . "cal_id IN (" . $calendars . ")"
-            . " AND (date_start >= " . $this->db->escape($date_start)   // OR end date, to accommodate events
-            . " OR date_end <= " . $this->db->escape($date_end) . ")"   // ending within date range
-            . " OR recurrence_type != 'never'";                         // Fetch recurring events
+            . " AND ((date_start >= " . $this->db->escape($date_start)       // OR end date, to accommodate events
+            . " AND date_start <= " . $this->db->escape($date_end) . ")"      // ending within date range
+            . " OR (date_end <= " . $this->db->escape($date_start)
+            . " AND date_end >= " . $this->db->escape($date_end) .")"
+            . " OR (date_start <= " . $this->db->escape($date_start)
+            . " AND date_end >= " . $this->db->escape($date_end) . ")"
+            . " OR recurrence_type != 'never')";                            // Fetch recurring events
 
         $query = $this->db->query($sql);
         $events = $this->check_recurring($query->result_array(), $date_start, $date_end);
@@ -144,8 +148,10 @@ class Event_model extends CI_Model {
             if ($row['date_start'] < $date_end) {
                 if ($row['recurrence_type'] == 'never') {
                     $start = date("Y-m-d", strtotime($row['date_start']));
+                    
                     if (($row['date_start'] >= $date_start && $row['date_start'] <= $date_end)
-                        || ($row['date_end'] >= $date_start && $row['date_end'] <= $date_end)) {
+                        || ($row['date_end'] >= $date_start && $row['date_end'] <= $date_end)
+                        || ($row['date_start'] <= $date_start && $row['date_end'] >= $date_end)) {
 
                         if ($start == date("Y-m-d", strtotime($row['date_end'])) && $row['date_start']) {
                             $final[] = $row;
@@ -177,7 +183,11 @@ class Event_model extends CI_Model {
                     $pre_end = date("Y-m-d H:i:s", strtotime($pre_start) + $diff);
                     $post_end = date("$this_year-$this_month-d H:i:s", strtotime($row['date_end']));
                     $post_start = date("Y-m-d H:i:s", strtotime($post_end) - $diff);
-                    if ($pre_start >= $date_start || $pre_end <= $date_end || $post_start >= $date_start || $post_end <= $date_end) {
+                    if (($pre_start >= $date_start && $pre_start <= $date_end)
+                        || ($pre_end <= $date_end && $pre_end >= $date_start)
+                        || ($post_start >= $date_start && $post_start <= $date_end)
+                        || ($post_end <= $date_end && $post_end >= $date_start)) {
+
                         $row['date_start'] = $pre_start;
                         $row['date_end'] = $pre_end;
                         if (date("Y-m-d", strtotime($pre_start)) == date("Y-m-d", strtotime($pre_end))) {
