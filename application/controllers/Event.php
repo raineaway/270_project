@@ -102,7 +102,7 @@ class Event extends CI_Controller {
                     );
 
                     $this->load->model('event_model');
-                    $result = $this->event_model->update($data);
+                    $result = $this->event_model->create($data);
 
                     if ($result['status'] == 'success') {
                         $this->session->set_userdata("success", "You have successfully created an event!");
@@ -113,6 +113,7 @@ class Event extends CI_Controller {
                 }
             }
         }
+        var_dump($errors);
         $data = array(
             'errors'        => $errors,
             'main_content'  => 'event_form.php',

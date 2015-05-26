@@ -150,45 +150,47 @@ class Event_model extends CI_Model {
                         if ($start == date("Y-m-d", strtotime($row['date_end'])) && $row['date_start']) {
                             $final[] = $row;
                         } else {
-                            $start = date("Y-m-d 00:00:00", strtotime($row['date_start']));
-                            $name = $row['name'];
-                            $orig_start = $row['date_start'];
-                            while ($start <= $row['date_end'] && $start <= $date_end) {     //check for spanning events
-                                if ($start >= $date_start) {
-                                    $final[] = $row;
-                                }
-                                $start = date("Y-m-d 00:00:00", strtotime("+1 day", strtotime($start)));
-                                if ($start != date("Y-m-d 00:00:00", strtotime($orig_start))) {
-                                    $row['name'] = "(cont'd) " . $name;
-                                }
-                                if ($start != date("Y-m-d 00:00:00", strtotime($row['date_end']))) {
-                                    $row['is_all_day'] = 1;
-                                } else {
-                                    $row['is_all_day'] = 0;
-                                    $row['ends'] = 1;
-                                }
-                                $row['date_start'] = $start;
-                            }
+                            $final = $this->generate_span($final, $row, $date_start, $date_end);
                         }
                     }
                 } else if ($row['recurrence_type'] == 'yearly') {           // check if yearly event falls within date range
                     $this_year = date("Y");
                     $start = date("$this_year-m-d H:i:s", strtotime($row['date_start']));
                     $end = date("$this_year-m-d H:i:s", strtotime($row['date_end']));
-                    if ($start >= $date_start || $end <= $date_end) {
+                    if (($start >= $date_start && $start <= $date_end) || ($end <= $date_end && $end >= $date_start)) {
                         $row['date_start'] = $start;
                         $row['date_end'] = $end;
-                        $final[] = $row;
+                        if (date("Y-m-d", strtotime($start)) == date("Y-m-d", strtotime($end))) {
+                            $final[] = $row;
+                        } else {
+                            $final = $this->generate_span($final, $row, $date_start, $date_end);
+                        }
                     }
                 } else if ($row['recurrence_type'] == 'monthly') {      // check if monthly event falls within date range
-                    $this_month = date("m");
-                    $this_year = date("Y");
-                    $start = date("$this_year-$this_month-d H:i:s", strtotime($row['date_start']));
-                    $end = date("$this_year-$this_month-d  H:i:s", strtotime($row['date_end']));
-                    if ($start >= $date_start || $end <= $date_end) {
-                        $row['date_start'] = $start;
-                        $row['date_end'] = $end;
-                        $final[] = $row;
+                    $this_month = date("m", strtotime($date_start));
+                    $this_year = date("Y", strtotime($date_start));
+
+                    $unix_start = strtotime($row['date_start']);
+                    $unix_end = strtotime($row['date_end']);
+                    $diff = $unix_end - $unix_start;
+                    $pre_start = date("$this_year-$this_month-d H:i:s", strtotime($row['date_start']));
+                    $pre_end = date("Y-m-d H:i:s", strtotime($pre_start) + $diff);
+                    $post_end = date("$this_year-$this_month-d H:i:s", strtotime($row['date_end']));
+                    $post_start = date("Y-m-d H:i:s", strtotime($post_end) - $diff);
+                    if ($pre_start >= $date_start || $pre_end <= $date_end || $post_start >= $date_start || $post_end <= $date_end) {
+                        $row['date_start'] = $pre_start;
+                        $row['date_end'] = $pre_end;
+                        if (date("Y-m-d", strtotime($pre_start)) == date("Y-m-d", strtotime($pre_end))) {
+                            $final[] = $row;
+                        } else {
+                            $rows[] = $row;
+                            $row['date_start'] = $post_start;
+                            $row['date_end'] = $post_end;
+                            $rows[] = $row;
+                            foreach ($rows as $row) {
+                                $final = $this->generate_span($final, $row, $date_start, $date_end);
+                            }
+                        }
                     }
                 } else if ($row['recurrence_type'] == 'weekly') {       // check if weekly event falls within date range
                     while (TRUE) {
@@ -225,6 +227,30 @@ class Event_model extends CI_Model {
                 }
             }
         }
+        return $final;
+    }
+
+    private function generate_span($final, $row, $date_start, $date_end) {
+        $start = date("Y-m-d 00:00:00", strtotime($row['date_start']));
+        $name = $row['name'];
+        $orig_start = $row['date_start'];
+        while ($start <= $row['date_end'] && $start <= $date_end) {     //check for spanning events
+            if ($start >= $date_start) {
+                $final[] = $row;
+            }
+            $start = date("Y-m-d 00:00:00", strtotime("+1 day", strtotime($start)));
+            if ($start != date("Y-m-d 00:00:00", strtotime($orig_start))) {
+                $row['name'] = "(cont'd) " . $name;
+            }
+            if ($start != date("Y-m-d 00:00:00", strtotime($row['date_end']))) {
+                $row['is_all_day'] = 1;
+            } else {
+                $row['is_all_day'] = 0;
+                $row['ends'] = 1;
+            }
+            $row['date_start'] = $start;
+        }
+
         return $final;
     }
 
