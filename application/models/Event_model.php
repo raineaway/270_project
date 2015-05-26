@@ -94,8 +94,8 @@ class Event_model extends CI_Model {
             . "cal_id IN (" . $calendars . ")"
             . " AND ((date_start >= " . $this->db->escape($date_start)       // OR end date, to accommodate events
             . " AND date_start <= " . $this->db->escape($date_end) . ")"      // ending within date range
-            . " OR (date_end <= " . $this->db->escape($date_start)
-            . " AND date_end >= " . $this->db->escape($date_end) .")"
+            . " OR (date_end >= " . $this->db->escape($date_start)
+            . " AND date_end <= " . $this->db->escape($date_end) .")"
             . " OR (date_start <= " . $this->db->escape($date_start)
             . " AND date_end >= " . $this->db->escape($date_end) . ")"
             . " OR recurrence_type != 'never')";                            // Fetch recurring events
@@ -183,10 +183,11 @@ class Event_model extends CI_Model {
                     $pre_end = date("Y-m-d H:i:s", strtotime($pre_start) + $diff);
                     $post_end = date("$this_year-$this_month-d H:i:s", strtotime($row['date_end']));
                     $post_start = date("Y-m-d H:i:s", strtotime($post_end) - $diff);
-                    if (($pre_start >= $date_start && $pre_start <= $date_end)
-                        || ($pre_end <= $date_end && $pre_end >= $date_start)
-                        || ($post_start >= $date_start && $post_start <= $date_end)
-                        || ($post_end <= $date_end && $post_end >= $date_start)) {
+
+                    if (($pre_start >= $row['date_start'] && $pre_start >= $date_start && $pre_start <= $date_end)
+                        || ($pre_end >= $row['date_end'] && $pre_end <= $date_end && $pre_end >= $date_start)
+                        || ($post_start >= $row['date_start'] && $post_start >= $date_start && $post_start <= $date_end)
+                        || ($post_end >= $row['date_end'] && $post_end <= $date_end && $post_end >= $date_start)) {
 
                         $row['date_start'] = $pre_start;
                         $row['date_end'] = $pre_end;
