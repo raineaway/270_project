@@ -10,21 +10,28 @@
 			<div class="panel panel-default">
 			  <div class="panel-body">
 				<?php
-				$attributes = array('class' => 'event_list', 'id' => 'event_list');
-				echo ul($list, $attributes);
+                    if (isset($success)) {
+                        echo '<div class="bg-success">' . $success . '</div>';
+                    }
+                    if (isset($fail)) {
+                        echo '<div class="bg-danger">' . $fail . '</div>';
+                    }
+
+				    $attributes = array('class' => 'event_list', 'id' => 'event_list');
+				    echo ul($list, $attributes);
 				?>
 			  </div>
 			</div>
 
-				<?php
+			<?php
 				$attributes = array(
-               'class' => 'btn btn-primary',
-               'role'  => 'button'
-            );
+                    'class' => 'btn btn-primary',
+                    'role'  => 'button'
+                );
 				echo br(2);
 				echo anchor(site_url(array('home')), 'Dashboard', $attributes) ;
 				echo br(3);
-				?>
+			?>
 		</div>
 	</div>
 </div>

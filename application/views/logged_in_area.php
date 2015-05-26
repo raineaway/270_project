@@ -22,6 +22,15 @@
 			<p> <?php	echo "Today is " . date("Y-m-d g:i A"); ?> </p>
 		</div>
 
+        <?php
+            if (isset($success)) {
+                echo '<div class="bg-success">' . $success . '</div>';
+            }
+            if (isset($fail)) {
+                echo '<div class="bg-danger">' . $fail . '</div>';
+            }
+        ?>
+
 		<div class="row" style="width: 100%">
 			<div style="width: 100px; float: left">
 				<div class="btn-group-horizontal" role="group">
