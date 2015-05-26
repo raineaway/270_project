@@ -7,9 +7,15 @@
 			<p class="lead"> <?= $heading ?></p>
 
 			<?php
+                if (isset($success)) {
+                    echo '<div class="bg-success">' . $success . '</div>';
+                }
+                if (isset($fail)) {
+                    echo '<div class="bg-danger">' . $fail . '</div>';
+                }
 
-			$attributes = array('class' => 'event_list', 'id' => 'event_list');
-			echo ul($list, $attributes);
+			    $attributes = array('class' => 'event_list', 'id' => 'event_list');
+			    echo ul($list, $attributes);
 			?>
 
 

@@ -12,6 +12,9 @@ class Calendar extends CI_Controller {
 
     public function show_calendar($year=null, $month=null){
         $this->check_session();
+        if (!$year) { $year = date('Y'); }
+        if (!$month) { $month = date('m'); }
+
         $this->load->model('calendar_model');
         $details = $this->calendar_model->generate_calendar($year, $month);
 
@@ -76,6 +79,16 @@ class Calendar extends CI_Controller {
         $data['calendars'] = $this->get_list();
 
         $data['main_content'] = 'logged_in_area';
+
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        if ($this->session->userdata('fail')) {
+            $data['fail'] = $this->session->userdata('fail');
+            $this->session->unset_userdata('fail');
+        }
+
         $this->load->view('includes/template', $data);
     }
 

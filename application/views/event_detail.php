@@ -8,7 +8,10 @@
 
 			<?php
                 if (isset($success)) {
-                    echo '<div class="success">' . $success . '</div>';
+                    echo '<div class="bg-success">' . $success . '</div>';
+                }
+                if (isset($fail)) {
+                    echo '<div class="bg-danger">' . $fail . '</div>';
                 }
 
 				$this->table->set_heading( 'Fields', 'Details' );

@@ -28,14 +28,21 @@ class Event extends CI_Controller {
         $list = $this->prepare_list($events, "$year-$month-$day");
 
         $data = array(
-                'username'     => $user_id,
-                'date'         => $date_start,
-                'list'         => $list,
-                'type'         => 'day',
-                'heading'      => 'Your event/s for ' . date( 'M d Y - l', strtotime($date_start)),
-                'main_content' => 'event'
-                );
-
+            'username'     => $user_id,
+            'date'         => $date_start,
+            'list'         => $list,
+            'type'         => 'day',
+            'heading'      => 'Your event/s for ' . date( 'M d Y - l', strtotime($date_start)),
+            'main_content' => 'event'
+        );
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        if ($this->session->userdata('fail')) {
+            $data['fail'] = $this->session->userdata('fail');
+            $this->session->unset_userdata('fail');
+        }
         $this->load->view('includes/template', $data);
     }
 
@@ -53,6 +60,10 @@ class Event extends CI_Controller {
         if ($this->session->userdata('success')) {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
+        }
+        if ($this->session->userdata('fail')) {
+            $data['fail'] = $this->session->userdata('fail');
+            $this->session->unset_userdata('fail');
         }
         $this->load->view('includes/template', $data);
 
@@ -75,21 +86,21 @@ class Event extends CI_Controller {
 
             if($this->form_validation->run() == TRUE) {
                 $dates = $this->check_date($this->input->post('date_start'), $this->input->post('date_end'),
-                        $this->input->post('time_start'), $this->input->post('time_end'));
+                    $this->input->post('time_start'), $this->input->post('time_end'));
 
                 if ($dates === FALSE) {
                     $errors['date_start'] = "Start date must be less than End date.";
                 } else {
                     $is_all_day = $this->input->post("is_all_day", TRUE) ? 1 : 0;
                     $data = array(
-                            'name'            => $this->input->post("name", TRUE),
-                            'is_all_day'      => $is_all_day,
-                            'date_start'      => $dates['start'],
-                            'date_end'        => $dates['end'],
-                            'cal_id'          => $this->input->post("cal_id", TRUE),
-                            'recurrence_type' => $this->input->post("recurrence_type", TRUE),
-                            'date_created'    => date("Y-m-d H:i:s")
-                            );
+                        'name'            => $this->input->post("name", TRUE),
+                        'is_all_day'      => $is_all_day,
+                        'date_start'      => $dates['start'],
+                        'date_end'        => $dates['end'],
+                        'cal_id'          => $this->input->post("cal_id", TRUE),
+                        'recurrence_type' => $this->input->post("recurrence_type", TRUE),
+                        'date_created'    => date("Y-m-d H:i:s")
+                    );
 
                     $this->load->model('event_model');
                     $result = $this->event_model->update($data);
@@ -104,13 +115,13 @@ class Event extends CI_Controller {
             }
         }
         $data = array(
-                'errors'       => $errors,
-                'main_content' => 'event_form.php',
-                'calendars'    => $this->get_calendars(),
-                'heading'      => 'Create new event',
-                'form_action'  => 'event/new_event',
-                'submit_button' => 'Create Event'
-                );
+            'errors'        => $errors,
+            'main_content'  => 'event_form.php',
+            'calendars'     => $this->get_calendars(),
+            'heading'       => 'Create new event',
+            'form_action'   => 'event/new_event',
+            'submit_button' => 'Create Event'
+        );
 
         $this->load->view("includes/template", $data);
         return;
@@ -133,15 +144,15 @@ class Event extends CI_Controller {
                 } else {
                     $is_all_day = $this->input->post("is_all_day", TRUE) ? 1 : 0;
                     $data = array(
-                            'event_id'        => $event_id,
-                            'name'            => $this->input->post("name", TRUE),
-                            'is_all_day'      => $is_all_day,
-                            'date_start'      => $dates['start'],
-                            'date_end'        => $dates['end'],
-                            'cal_id'          => $this->input->post("cal_id", TRUE),
-                            'recurrence_type' => $this->input->post("recurrence_type", TRUE),
-                            'date_created'    => date("Y-m-d H:i:s")
-                            );
+                        'event_id'        => $event_id,
+                        'name'            => $this->input->post("name", TRUE),
+                        'is_all_day'      => $is_all_day,
+                        'date_start'      => $dates['start'],
+                        'date_end'        => $dates['end'],
+                        'cal_id'          => $this->input->post("cal_id", TRUE),
+                        'recurrence_type' => $this->input->post("recurrence_type", TRUE),
+                        'date_created'    => date("Y-m-d H:i:s")
+                    );
 
                     $this->load->model('event_model');
                     $result = $this->event_model->update($data);
@@ -200,30 +211,44 @@ class Event extends CI_Controller {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
         }
+        if ($this->session->userdata('fail')) {
+            $data['fail'] = $this->session->userdata('fail');
+            $this->session->unset_userdata('fail');
+        }
 
         $this->load->view("includes/template", $data);
         return;
 
     }
 
-    public function delete_event($event_id) {
-        die("Not yet done");
+    public function delete_event($event_id, $previous="") {
         $this->check_session();
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $previous = str_replace("-", "/", $previous);
             $this->load->model('event_model');
             $result = $this->event_model->delete_by_id($event_id);
             if ($result) {
                 $this->session->set_userdata("success", "Successfully deleted event.");
-                header("Location: " . $this->input->post('prev'));
+                if (!empty($previous)) {
+                    header("Location: " . site_url(array('event/' . $previous)));
+                } else {
+                    header("Location: " . site_url(array('calendar')));
+                }
             } else {
-                $error = "Unable to delete event.";
+                $this->session->set_userdata("fail", "Unable to delete event.");
+                header("Location: " . site_url(array('event/detail/' . $event_id . "/" . $previous)));
             }
         }
 
+        $this->load->model('event_model');
+        $event = $this->event_model->get_by_id($event_id);
         $data = array(
-
-                );
+            'event'        => $event,
+            'previous'     => $previous,
+            'main_content' => 'event_delete',
+        );
+        $this->load->view('includes/template', $data);
     }
 
 
