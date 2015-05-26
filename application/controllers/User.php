@@ -16,8 +16,12 @@ class User extends CI_Controller {
         $this->load->model("user_model");
         $user = $this->user_model->get_by_username($this->session->userdata("username"));
 
-        $data['user'] = $user;
-        $data['main_content'] = "account.php";
+        $data = array(
+           'user'          => $user,
+           'main_content'  => 'account',
+           'heading'       => 'Your User Account Settings',
+        );
+
         $this->load->view('includes/template', $data);
     }
 
@@ -75,7 +79,7 @@ class User extends CI_Controller {
         $data['heading'] = 'Edit Account';
         $data['form_action'] = 'user/update';
         $data['submit_button'] = 'Update';
-        $data['main_content'] = "signup.php";
+        $data['main_content'] = "account_form.php";
         $data['errors'] = $errors;
         $this->load->view('includes/template', $data);
     }

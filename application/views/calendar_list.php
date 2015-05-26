@@ -1,38 +1,34 @@
 <div id="container">
-    <h1>Welcome to Skedjul!</h1>
+	<div class="container">
+      <div class="page-header" style="margin-top: 40px">
+         <h1>Welcome to Skedjul! <small>Hello <?php echo $this->session->userdata('username');?>! You're logged in. </small></h1>
+      </div>
+		<div id="body">
 
-    <div id="body">
-        <div id="subcontainer">
-            <?php echo heading('Your Calendars', 3); ?>
-            <a href="<?php echo site_url(array('calendar/new_calendar')); ?>">Create Calendar</a>
-            <br/>
-            <br/>
-            <?php if (isset($success)) { ?>
-                <div class="success"><?php echo $this->session->flashdata('success'); ?></div>
-            <?php } ?>
-            <div>
-                <div style="float:left; width:75%;">Name</div>
-                <div style="float:left; width:24%;">Actions</div>
-            </div>
-            <br/>
-            <br/>
-            <?php foreach($calendars as $calendar) { ?>
-                <div>
-                    <div style="float:left; width:75%; color:<?php echo $calendar['color']; ?>">
-                        <?php echo $calendar['name']; ?>
-                    </div>
-                    <div style="float:left; width:25%;">
-                        <a href="<?php echo site_url(array('calendar/update', $calendar['cal_id'])); ?>">Edit</a>
-                        <a href="<?php echo site_url(array('calendar/delete', $calendar['cal_id'])); ?>">Delete</a>
-                    </div>
+			<p class="lead"> Your Calendars </p>
+
+			<div class="panel panel-default" style="width:40%">
+			  <div class="panel-body">
+             <div class="row">
+                <?php foreach($calendars as $calendar) { ?>
+                <div class="col-sm-7" style="color:<?php echo $calendar['color']; ?>">
+                   <?php echo $calendar['name']; ?>
                 </div>
-            <?php } ?>
-            <?php echo br(5); ?>
-        </div>
-        <?php
-        echo br(2);
-        echo anchor(site_url(array('home')), 'Dashboard') ; ?>
-    </div>
-    <?php
-    echo br(2); ?>
+                <div class="col-sm-5">
+                   <a href="<?php echo site_url(array('calendar/update', $calendar['cal_id'])); ?>"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                   <?=nbs(3); ?>
+                   <a href="<?php echo site_url(array('calendar/delete', $calendar['cal_id'])); ?>"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+                </div>
+                <?php } ?>
+              </div>
+			  </div>
+			</div>
+
+				<?php
+				echo br(2);
+				echo anchor(site_url(array('home')), 'Dashboard', "class='btn btn-primary'") ;
+				echo br(3);
+				?>
+		</div>
+	</div>
 </div>

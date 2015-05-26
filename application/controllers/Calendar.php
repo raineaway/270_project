@@ -18,11 +18,11 @@ class Calendar extends CI_Controller {
         $this->load->model('calendar_model');
         $details = $this->calendar_model->generate_calendar($year, $month);
 
-        $base_url = $this->config->base_url();
+        $base_url = $this->config->site_url();
         $prefs = array(
             'show_next_prev' => TRUE,
             'next_prev_url'  => site_url(array('calendar/show_calendar/')),
-            'template' => 
+            'template' =>
             '{table_open}<table border="0" cellpadding="0" cellspacing="0" class="calendar">{/table_open}
 
             {heading_row_start}<tr>{/heading_row_start}
@@ -46,13 +46,13 @@ class Calendar extends CI_Controller {
             {cal_cell_content}
             <div class="day_num">
                 <span>
-                <a href="' . $base_url . 'event/'. $year.'/'.$month.'/{day}">{day}</a></span>
+                <a href="' . $base_url . '/event/'. $year.'/'.$month.'/{day}">{day}</a></span>
             </div>
             <div class="content">{content}
             </div>
             {/cal_cell_content}
             {cal_cell_content_today}
-            <a href="' . $base_url . 'event/'. $year.'/'.$month.'/{day}">{day}</a></span>
+            <a href="' . $base_url . '/event/'. $year.'/'.$month.'/{day}">{day}</a></span>
             <div class="content">{content}</div>
             {/cal_cell_content_today}
 

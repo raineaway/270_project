@@ -19,7 +19,7 @@
 			 		echo br(3);?>
 			</div>
 			<h3>Dashboard</h3>
-			<p> <?php	echo "Today is " . date("Y-m-d G:i A"); ?> </p>
+			<p> <?php	echo "Today is " . date("Y-m-d g:i A"); ?> </p>
 		</div>
 
         <?php
