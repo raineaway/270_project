@@ -15,7 +15,7 @@ class Calendar_model extends CI_Model {
                 //);
     }
 
-    public function generate_calendar($year = null, $month = null) {
+    public function generate_calendar($year = null, $month = null, $cal_id = null) {
         if (!$year) { $year = date('Y'); }
         if (!$month) { $month = date('m'); }
 
@@ -84,8 +84,12 @@ class Calendar_model extends CI_Model {
         $this->load->model('event_model');
 
         //get an array of calendar_ids
-        $calendar_ids = $this->get_all_calendar_ids_by_user_id($this->session->userdata('user_id'));
-        $events_all = $this->event_model->get_events_by_calendars($calendar_ids, 'month', $date->getTimestamp());
+        if ($cal_id) {
+            $events_all = $this->event_model->get_events_by_calendar($cal_id, 'month', $date->getTimestamp());
+        } else {
+            $calendar_ids = $this->get_all_calendar_ids_by_user_id($this->session->userdata('user_id'));
+            $events_all = $this->event_model->get_events_by_calendars($calendar_ids, 'month', $date->getTimestamp());
+        }
 
         $details_all = array();
 

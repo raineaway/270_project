@@ -62,11 +62,20 @@ class Event_model extends CI_Model {
             $date_end = date("Y-m-d 23:59:59", $date_start);
         }
 
+        //$sql = "SELECT * FROM event WHERE "
+            //. "cal_id = " . $this->db->escape($cal_id)
+            //. " AND (date_start >= " . $this->db->escape($date_start)   // OR end date, to accommodate events
+            //. " OR date_end <= " . $this->db->escape($date_end) . ")"   // ending within date range
+            //. " OR recurrence_type != 'never'";                         // Fetch recurring events
         $sql = "SELECT * FROM event WHERE "
             . "cal_id = " . $this->db->escape($cal_id)
-            . " AND (date_start >= " . $this->db->escape($date_start)   // OR end date, to accommodate events
-            . " OR date_end <= " . $this->db->escape($date_end) . ")"   // ending within date range
-            . " OR recurrence_type != 'never'";                         // Fetch recurring events
+            . " AND ((date_start >= " . $this->db->escape($date_start)       // OR end date, to accommodate events
+            . " AND date_start <= " . $this->db->escape($date_end) . ")"      // ending within date range
+            . " OR (date_end >= " . $this->db->escape($date_start)
+            . " AND date_end <= " . $this->db->escape($date_end) .")"
+            . " OR (date_start <= " . $this->db->escape($date_start)
+            . " AND date_end >= " . $this->db->escape($date_end) . ")"
+            . " OR recurrence_type != 'never')";                            // Fetch recurring events
         $query = $this->db->query($sql);
 
         $events = $this->check_recurring($query->result_array(), $date_start, $date_end);
@@ -160,10 +169,12 @@ class Event_model extends CI_Model {
                         }
                     }
                 } else if ($row['recurrence_type'] == 'yearly') {           // check if yearly event falls within date range
-                    $this_year = date("Y");
+                    $this_year = date("Y", strtotime($date_start));
                     $start = date("$this_year-m-d H:i:s", strtotime($row['date_start']));
                     $end = date("$this_year-m-d H:i:s", strtotime($row['date_end']));
-                    if (($start >= $date_start && $start <= $date_end) || ($end <= $date_end && $end >= $date_start)) {
+                    if (($start >= $date_start && $start <= $date_end) || ($end <= $date_end && $end >= $date_start)
+                        || ($start <= $date_start && $end >= $date_end)) {
+
                         $row['date_start'] = $start;
                         $row['date_end'] = $end;
                         if (date("Y-m-d", strtotime($start)) == date("Y-m-d", strtotime($end))) {
@@ -183,11 +194,14 @@ class Event_model extends CI_Model {
                     $pre_end = date("Y-m-d H:i:s", strtotime($pre_start) + $diff);
                     $post_end = date("$this_year-$this_month-d H:i:s", strtotime($row['date_end']));
                     $post_start = date("Y-m-d H:i:s", strtotime($post_end) - $diff);
+                    $orig_start = $row['date_start'];
+                    $orig_end = $row['date_end'];
 
+                    $rows = array();
                     if (($pre_start >= $row['date_start'] && $pre_start >= $date_start && $pre_start <= $date_end)
                         || ($pre_end >= $row['date_end'] && $pre_end <= $date_end && $pre_end >= $date_start)
-                        || ($post_start >= $row['date_start'] && $post_start >= $date_start && $post_start <= $date_end)
-                        || ($post_end >= $row['date_end'] && $post_end <= $date_end && $post_end >= $date_start)) {
+                        || ($pre_start >= $row['date_start'] && $pre_start <= $date_start
+                        && $pre_end >= $row['date_end'] && $pre_end >= $date_end)) {
 
                         $row['date_start'] = $pre_start;
                         $row['date_end'] = $pre_end;
@@ -195,13 +209,24 @@ class Event_model extends CI_Model {
                             $final[] = $row;
                         } else {
                             $rows[] = $row;
-                            $row['date_start'] = $post_start;
-                            $row['date_end'] = $post_end;
-                            $rows[] = $row;
-                            foreach ($rows as $row) {
-                                $final = $this->generate_span($final, $row, $date_start, $date_end);
-                            }
                         }
+                    }
+                    if (($pre_start != $post_start) &&
+                        (($post_start >= $orig_start && $post_start >= $date_start && $post_start <= $date_end)
+                        || ($post_end >= $orig_end && $post_end <= $date_end && $post_end >= $date_start)
+                        || ($post_start >= $orig_start && $post_start <= $date_start
+                        && $post_end >= $orig_start && $post_end >= $date_end))) {
+
+                        $row['date_start'] = $post_start;
+                        $row['date_end'] = $post_end;
+                        if (date("Y-m-d", strtotime($post_start)) == date("Y-m-d", strtotime($post_end))) {
+                            $final[] = $row;
+                        } else {
+                            $rows[] = $row;
+                        }
+                    }
+                    foreach ($rows as $row) {
+                        $final = $this->generate_span($final, $row, $date_start, $date_end);
                     }
                 } else if ($row['recurrence_type'] == 'weekly') {       // check if weekly event falls within date range
                     while (TRUE) {
