@@ -1,7 +1,7 @@
 <div id="container">
 	<div class="container">
       <div class="page-header" style="margin-top: 40px">
-         <h1>Welcome to Skedjul! <small>Hello <?php echo $username;?>! You're logged in. </small></h1>
+         <h1>Welcome to Skedjul! <small>Hello <?php echo $this->session->userdata('username');?>! You're logged in. </small></h1>
       </div>
 		<div id="body">
 

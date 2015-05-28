@@ -47,13 +47,13 @@ class Calendar extends CI_Controller {
             {cal_cell_content}
             <div class="day_num">
                 <span>
-                <a href="' . $base_url . 'event/'. $year.'/'.$month.'/{day}">{day}</a></span>
+                <a href="' . $base_url . '/event/'. $year.'/'.$month.'/{day}">{day}</a></span>
             </div>
             <div class="content">{content}
             </div>
             {/cal_cell_content}
             {cal_cell_content_today}
-            <a href="' . $base_url . 'event/'. $year.'/'.$month.'/{day}">{day}</a></span>
+            <a href="' . $base_url . '/event/'. $year.'/'.$month.'/{day}">{day}</a></span>
             <div class="content">{content}</div>
             {/cal_cell_content_today}
 
