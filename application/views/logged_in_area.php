@@ -24,10 +24,10 @@
 
         <?php
             if (isset($success)) {
-                echo '<div class="bg-success">' . $success . '</div>';
+                echo '<div class="alert alert-info" role="alert">' . $success . '</div>';
             }
             if (isset($fail)) {
-                echo '<div class="bg-danger">' . $fail . '</div>';
+                echo '<div class="alert alert-danger" role="alert">' . $fail . '</div>';
             }
         ?>
 

@@ -7,6 +7,15 @@
 
 			<p class="lead"> Your Calendars </p>
 
+            <?php
+                if (isset($success)) {
+                    echo '<div class="alert alert-info" role="alert">' . $success . '</div>';
+                }
+                if (isset($fail)) {
+                    echo '<div class="alert alert-danger" role="alert">' . $fail . '</div>';
+                }
+            ?>
+
 			<div class="panel panel-default" style="width:40%">
 			  <div class="panel-body">
              <div class="row">

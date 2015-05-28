@@ -40,11 +40,11 @@ class Event_model extends CI_Model {
             . " WHERE event_id = " . $this->db->escape($data['event_id']);
         $this->db->query($sql);
         $rows = $this->db->affected_rows();
-        if ($rows > 0) {
+        //if ($rows > 0) {
             return array("status" => "success");
-        }
+        //}
         //return array("status" => "fail", "error" => $this->db->_error_message());
-        return array("status" => "fail", "error" => "A database error occurred.");
+        //return array("status" => "fail", "error" => "A database error occurred.");
     }
 
     public function get_events_by_calendar($cal_id, $view, $date_start) {

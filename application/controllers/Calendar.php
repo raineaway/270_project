@@ -20,6 +20,9 @@ class Calendar extends CI_Controller {
         $details = $this->calendar_model->generate_calendar($year, $month, $cal_id);
 
         $base_url = $this->config->site_url();
+        if (substr($base_url, -1) != "/") {
+            $base_url = $base_url . "/";
+        }
         $prefs = array(
             'show_next_prev' => TRUE,
             'next_prev_url'  => site_url(array('calendar/show_calendar/')),
@@ -47,13 +50,13 @@ class Calendar extends CI_Controller {
             {cal_cell_content}
             <div class="day_num">
                 <span>
-                <a href="' . $base_url . '/event/'. $year.'/'.$month.'/{day}">{day}</a></span>
+                <a href="' . $base_url . 'event/'. $year.'/'.$month.'/{day}">{day}</a></span>
             </div>
             <div class="content">{content}
             </div>
             {/cal_cell_content}
             {cal_cell_content_today}
-            <a href="' . $base_url . '/event/'. $year.'/'.$month.'/{day}">{day}</a></span>
+            <a href="' . $base_url . 'event/'. $year.'/'.$month.'/{day}">{day}</a></span>
             <div class="content">{content}</div>
             {/cal_cell_content_today}
 
@@ -96,8 +99,13 @@ class Calendar extends CI_Controller {
     public function list_all() {
         $this->check_session();
 
-        if ($this->session->flashdata('success')) {
-            $data['success'] = $this->session->flashdata('success');
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        if ($this->session->userdata('fail')) {
+            $data['fail'] = $this->session->userdata('fail');
+            $this->session->unset_userdata('fail');
         }
         $data['calendars'] = $this->get_list();
         $data['main_content'] = 'calendar_list';
@@ -145,7 +153,7 @@ class Calendar extends CI_Controller {
                 $result = $this->calendar_model->create($data);
 
                 if ($result['status'] == 'success') {
-                    $this->session->set_flashdata('success', 'Successfully created calendar');
+                    $this->session->set_userdata('success', 'Successfully created calendar');
                     header("Location: " . site_url(array('calendar/list_all')));
                 } else {
                     $errors['warning'] = $result['error'];
@@ -182,7 +190,7 @@ class Calendar extends CI_Controller {
                 $result = $this->calendar_model->update($data);
 
                 if ($result['status'] == 'success') {
-                    $this->session->set_flashdata("success", "Successfully modified calendar " . $data['name']);
+                    $this->session->set_userdata("success", "Successfully modified calendar " . $data['name']);
                     header("Location: " . site_url(array('calendar/list_all')));
                 } else {
                     $errors['warning'] = $result['error'];
@@ -214,9 +222,9 @@ class Calendar extends CI_Controller {
         $this->load->model('calendar_model');
         $result = $this->calendar_model->delete_by_id($cal_id);
         if ($result === TRUE) {
-            $this->session->set_flashdata('success', 'Successfully deleted calendar.');
+            $this->session->set_userdata('success', 'Successfully deleted calendar.');
         } else {
-            $this->session->set_flashdata('fail', $result['error']);
+            $this->session->set_userdata('fail', $result['error']);
         }
         redirect('calendar/list_all');
     }

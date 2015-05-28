@@ -156,10 +156,11 @@ class Calendar_model extends CI_Model {
             . " WHERE cal_id = " . $this->db->escape($data['cal_id']);
         $this->db->query($sql);
         $rows = $this->db->affected_rows();
-        if ($rows > 0) {
+        //if ($rows > 0) {
             return array("status" => "success");
-        }
-        return array("status" => "fail", "error" => $this->db->_error_message());
+        //}
+        //return array("status" => "fail", "error" => $this->db->_error_message());
+        return array("status" => "fail", "error" => "A Database Error occurred");
     }
 
     public function get_by_id($cal_id) {
