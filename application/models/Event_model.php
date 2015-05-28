@@ -172,7 +172,9 @@ class Event_model extends CI_Model {
                     $this_year = date("Y", strtotime($date_start));
                     $start = date("$this_year-m-d H:i:s", strtotime($row['date_start']));
                     $end = date("$this_year-m-d H:i:s", strtotime($row['date_end']));
-                    if (($start >= $date_start && $start <= $date_end) || ($end <= $date_end && $end >= $date_start)) {
+                    if (($start >= $date_start && $start <= $date_end) || ($end <= $date_end && $end >= $date_start)
+                        || ($start <= $date_start && $end >= $date_end)) {
+
                         $row['date_start'] = $start;
                         $row['date_end'] = $end;
                         if (date("Y-m-d", strtotime($start)) == date("Y-m-d", strtotime($end))) {
@@ -197,7 +199,9 @@ class Event_model extends CI_Model {
 
                     $rows = array();
                     if (($pre_start >= $row['date_start'] && $pre_start >= $date_start && $pre_start <= $date_end)
-                        || ($pre_end >= $row['date_end'] && $pre_end <= $date_end && $pre_end >= $date_start)) {
+                        || ($pre_end >= $row['date_end'] && $pre_end <= $date_end && $pre_end >= $date_start)
+                        || ($pre_start >= $row['date_start'] && $pre_start <= $date_start
+                        && $pre_end >= $row['date_end'] && $pre_end >= $date_end)) {
 
                         $row['date_start'] = $pre_start;
                         $row['date_end'] = $pre_end;
@@ -209,7 +213,9 @@ class Event_model extends CI_Model {
                     }
                     if (($pre_start != $post_start) &&
                         (($post_start >= $orig_start && $post_start >= $date_start && $post_start <= $date_end)
-                        || ($post_end >= $orig_end && $post_end <= $date_end && $post_end >= $date_start))) {
+                        || ($post_end >= $orig_end && $post_end <= $date_end && $post_end >= $date_start)
+                        || ($post_start >= $orig_start && $post_start <= $date_start
+                        && $post_end >= $orig_start && $post_end >= $date_end))) {
 
                         $row['date_start'] = $post_start;
                         $row['date_end'] = $post_end;

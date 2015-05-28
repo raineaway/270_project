@@ -13,14 +13,14 @@
          	}
 
          	$attributes = array( 'class' => 'btn btn-primary', 'role'  => 'button');
-				$recurrence = array(
-						'never' => 'Never',
-						'daily' => 'Daily',
-						'weekly' => 'Weekly',
-						'monthly' => 'Monthly',
-						'yearly' => 'Yearly'
-					);
-			?>
+			$recurrence = array(
+				'never' => 'Never',
+				//'daily' => 'Daily',
+				//'weekly' => 'Weekly',
+				'monthly' => 'Monthly',
+				'yearly' => 'Yearly'
+			);
+		?>
 
          <div class="form-control">
 
@@ -67,16 +67,16 @@
 						<label for="date_start" class="col-sm-3 control-label">Start Date</label>
                   <div class="col-sm-8">
                       <?php
-								echo form_input(array(
-									'name'   => 'date_start',
-									'type'   => 'date',
-									'value'  => set_value('date_start', (isset($event['date_start'])) ? date('Y-m-d', strtotime($event['date_start'])) : '')));
+						echo form_input(array(
+							'name'   => 'date_start',
+							'type'   => 'date',
+							'value'  => set_value('date_start', (isset($event['date_start'])) ? date('Y-m-d', strtotime($event['date_start'])) : '')));
 
-								echo form_input(array(
-									'name'   => 'time_start',
-									'type'   => 'time',
-									'value'  => set_value('time_start', (isset($event['date_start'])) ? strftime('%H:%M:%S', strtotime($event['date_start'])) : '')));
-								?>
+						echo form_input(array(
+							'name'   => 'time_start',
+							'type'   => 'time',
+							'value'  => set_value('time_start', (isset($event['date_start'])) ? strftime('%H:%M:%S', strtotime($event['date_start'])) : '')));
+						?>
                    </div>
                 </div>
 

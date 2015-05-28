@@ -113,7 +113,6 @@ class Event extends CI_Controller {
                 }
             }
         }
-        var_dump($errors);
         $data = array(
             'errors'        => $errors,
             'main_content'  => 'event_form.php',
