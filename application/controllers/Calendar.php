@@ -14,9 +14,10 @@ class Calendar extends CI_Controller {
         $this->check_session();
         if (!$year) { $year = date('Y'); }
         if (!$month) { $month = date('m'); }
+        $cal_id = $this->input->get('cal_id') ? $this->input->get('cal_id') : NULL;
 
         $this->load->model('calendar_model');
-        $details = $this->calendar_model->generate_calendar($year, $month);
+        $details = $this->calendar_model->generate_calendar($year, $month, $cal_id);
 
         $base_url = $this->config->site_url();
         $prefs = array(

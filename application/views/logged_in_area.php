@@ -34,14 +34,16 @@
 		<div class="row" style="width: 100%">
 			<div style="width: 100px; float: left">
 				<div class="btn-group-horizontal" role="group">
+                <?php echo anchor(site_url(array('calendar')), 'All Calendars',
+                    array('class' => 'btn btn-default', 'role' => 'button', 'style' => 'color: #000; width:100%;')); ?>
 				<?php foreach($calendars as $cal) { ?>
 						<?php
 							$attributes = array(
 								'class' 	=> 'btn btn-default',
 								'role' 	=> 'button',
-								'style' 	=> 'color: ' . $cal['color'] . '; width: 100%'
+								'style' 	=> 'color: ' . $cal['color'] . '; width: 100%;'
 							);
-							echo anchor(site_url(array('calendar/show/'. $cal['cal_id'])), $cal['name'], $attributes); ?>
+							echo anchor(site_url(array('calendar?cal_id='. $cal['cal_id'])), $cal['name'], $attributes); ?>
 				 <?php } ?>
 				</div>
 			</div>

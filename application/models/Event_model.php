@@ -68,7 +68,7 @@ class Event_model extends CI_Model {
             //. " OR date_end <= " . $this->db->escape($date_end) . ")"   // ending within date range
             //. " OR recurrence_type != 'never'";                         // Fetch recurring events
         $sql = "SELECT * FROM event WHERE "
-            . "cal_id IN = " . $this->db->escape($cal_id)
+            . "cal_id = " . $this->db->escape($cal_id)
             . " AND ((date_start >= " . $this->db->escape($date_start)       // OR end date, to accommodate events
             . " AND date_start <= " . $this->db->escape($date_end) . ")"      // ending within date range
             . " OR (date_end >= " . $this->db->escape($date_start)
