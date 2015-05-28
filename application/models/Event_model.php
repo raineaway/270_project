@@ -75,7 +75,8 @@ class Event_model extends CI_Model {
             . " AND date_end <= " . $this->db->escape($date_end) .")"
             . " OR (date_start <= " . $this->db->escape($date_start)
             . " AND date_end >= " . $this->db->escape($date_end) . ")"
-            . " OR recurrence_type != 'never')";                            // Fetch recurring events
+            . " OR recurrence_type != 'never')"
+            . " ORDER BY date_start";                            // Fetch recurring events
         $query = $this->db->query($sql);
 
         $events = $this->check_recurring($query->result_array(), $date_start, $date_end);
@@ -107,7 +108,8 @@ class Event_model extends CI_Model {
             . " AND date_end <= " . $this->db->escape($date_end) .")"
             . " OR (date_start <= " . $this->db->escape($date_start)
             . " AND date_end >= " . $this->db->escape($date_end) . ")"
-            . " OR recurrence_type != 'never')";                            // Fetch recurring events
+            . " OR recurrence_type != 'never')"                            // Fetch recurring events
+            . " ORDER BY date_start";
 
         $query = $this->db->query($sql);
         $events = $this->check_recurring($query->result_array(), $date_start, $date_end);
