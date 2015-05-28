@@ -196,7 +196,7 @@ class Event extends CI_Controller {
         $view = $this->input->get("view", TRUE) ? $this->input->get("view", TRUE) : "month";
         $events = $this->event_model->get_events_by_calendars($calendars, $view, $date_start);
 
-        $list = $this->prepare_list($events);
+        $list = $this->prepare_list($events, null);
 
         $data = array(
             'errors'       => $errors,
@@ -253,6 +253,8 @@ class Event extends CI_Controller {
 
     private function prepare_list($events, $previous) {
         $list = array();
+
+
         foreach($events as $row) {
             if ($row['is_all_day'] == 0){
                 $list[] = anchor(site_url(array('event/detail/' . $row['event_id'] . "/$previous")),
